@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+        <title>Home</title>
+        <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" type="text/css" href="main.css">
+</head>
+
+<body>
+        <div class="settings">
+                        <button type="button" class="settingsbtn"></button>
+        </div>
+
+        <div class="play">
+                <div class="btn-group">
+                        <button type="button" class="btn playbtn btn-success disabled" id="play">Play</button>
+                        <button type="button" class="btn playbtn btn-success dropdown-toggle dropdown-toggle-split">
+                                <input type="file" id="instanceSelector" oninput="changeInstanceView()" webkitdirectory directory multiple>
+                        </button>
+                </div>
+        </div>
+        <div class="instanceView">
+                <div>
+                        <input type="text" class="form-control" id="instance" placeholder="instance location..." readonly>
+                </div>
+        </div>
+        
+
+        <script>
+
+                function createVersionWindow() {
+
+                        const {shell} = require('electron'); // deconstructing assignment
+
+                        shell.openItem('C:\\');
+
+                        /*
+                        const electron = require('electron');
+                        const BrowserWindow = electron.remote.BrowserWindow;
+
+                        const childWindow = new BrowserWindow({
+                        width: 300,
+                        height: 200,
+                        alwaysOnTop: true,
+                        resizable: false
+                        });
+
+                        childWindow.on('closed', () => {
+                                childWindow = null;
+                        });*/
+                }
+
+                function changeInstanceView() {
+                        document.getElementById("instance").value = document.getElementById("instanceSelector").files[0].path;
+                        document.getElementById("play").classList.remove("disabled");
+                        
+                }
+        </script>
+        <script>
+                window.jQuery = window.$ = require('jquery');
+        </script>
+        <script src="node_modules/popper.js/dist/umd/popper.js"></script>
+        <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+</body>
+</html>
