@@ -1,3 +1,7 @@
+<a href="https://discord.gg/cEuUxkB">
+        <img src="https://img.shields.io/discord/308323056592486420.svg?logo=discord"
+            alt="chat on Discord"></a>
+			
 # launcher
 A launcher for Zerra, the video game.
 
