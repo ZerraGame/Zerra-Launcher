@@ -2,7 +2,7 @@
 A launcher for Zerra, the video game.
 
 ## Setting Up the Dev Environment
-**NOTE:** Before proceeding with these instructions, make sure you have both **Git Bash** and **NPM** installed.
+**NOTE:** Before proceeding with these instructions, make sure you have both [Git Bash](https://git-scm.com/downloads) and [NPM](https://www.npmjs.com/get-npm) installed.
 1. In the project directory, run the command `git clone https://github.com/Arpaesis/Zerra-Launcher.git`
 1. In the new folder you just cloned, run the command ``npm install electron``.
 1. After electron is installed, run the command ``npm install popper.js``.
