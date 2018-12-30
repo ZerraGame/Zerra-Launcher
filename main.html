@@ -2,14 +2,14 @@
 <html lang="en">
 
 <head>
-        <title>Home</title>
+        <title>Launcher</title>
         <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="main.css">
 </head>
 
 <body>
         <div class="settings">
-                        <button type="button" class="settingsbtn"></button>
+                        <button type="button" onclick="openSettings()" class="settingsbtn"></button>
         </div>
 
         <div class="play">
@@ -44,6 +44,36 @@
                 function changeInstanceView() {
                         document.getElementById("instance").value = document.getElementById("instanceSelector").files[0].path;
                         document.getElementById("play").classList.remove("disabled");
+                }
+
+                function openSettings() {
+
+                        const electron = require('electron');
+                        const url = require('url');
+                        const path = require('path');
+
+                        const BrowserWindow = electron.remote.BrowserWindow;
+
+                        let settings = new BrowserWindow({
+                                width: 500,
+                                height: 600,
+                                resizable: false,
+                                icon: path.join(__dirname, 'assets/res/icon.png')
+                        });
+
+                        settings.setMenu(null);
+
+                        // Load html into window
+                        settings.loadURL(url.format({
+                                pathname: path.join(__dirname, 'settings.html'),
+                                protocol:'file:',
+                                slashes: true
+                        }));
+
+                        //Garbage collection.
+                        settings.on('closed', function() {
+                                settings = null;
+                        });
                 }
         </script>
         <script>
