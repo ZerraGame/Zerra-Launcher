@@ -1,5 +1,5 @@
 <a href="https://discord.gg/cEuUxkB">
-        <img src="https://img.shields.io/discord/308323056592486420.svg?logo=discord?color=#8080ff"
+        <img src="https://img.shields.io/discord/308323056592486420.svg?logo=discord?colorB=#8080ff"
             alt="chat on Discord"></a>
 			
 # launcher
