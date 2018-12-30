@@ -58,10 +58,13 @@
                                 width: 500,
                                 height: 600,
                                 resizable: false,
+                                frame: false,
                                 icon: path.join(__dirname, 'assets/res/icon.png')
                         });
-
+                        //TODO:
+                        //settings.openDevTools();
                         settings.setMenu(null);
+                        settings.setAlwaysOnTop(true); 
 
                         // Load html into window
                         settings.loadURL(url.format({

@@ -7,7 +7,7 @@
 </head>
 <body>
     <div id="wrapper">
-        <form>
+        <form id="settings">
             <!--
             <div class="form-group">
                 <label for="autoUpdates">Automatic Updates</label>
@@ -22,27 +22,27 @@
                     <legend>Launcher Options</legend>
 
                     <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input">
+                        <input type="checkbox" class="form-check-input" name="NotifyUpdates" id="NotifyUpdates">
                         Notify me when an update for the launcher begins.
                     </label>
                     <br>
                     <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input">
+                        <input type="checkbox" class="form-check-input" name="NoLaunchDuringUpdate" id="NoLaunchDuringUpdate">
                         Prevent launching during an update.
                     </label>
                     <br>
                     <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input">
+                        <input type="checkbox" class="form-check-input" name="RememberEmail" id="RememberEmail">
                         Remember my email address.
                     </label>
                     <br>
                     <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input">
+                        <input type="checkbox" class="form-check-input" name="KeepLoggedIn" id="KeepLoggedIn">
                         Keep me logged in.
                     </label>
                     <br>
                     <label class="form-check-label">
-                        <input type="checkbox" class="form-check-input">
+                        <input type="checkbox" class="form-check-input" name="SendCrashReports" id="SendCrashReports">
                         Automatically send crash report info to developers.
                     </label>
             </fieldset>
@@ -51,19 +51,19 @@
                 <legend>Automatic Updates</legend>
                 <div class="form-check">
                 <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="option1" checked>
+                    <input type="radio" class="form-check-input" name="AutomaticUpdates" id="NeverAutoUpdate" value="NeverAutoUpdate">
                     Never automatically update.
                 </label>
                 </div>
                 <div class="form-check">
                 <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2">
+                    <input type="radio" class="form-check-input" name="AutomaticUpdates" id="AutoUpdate" value="AutoUpdate">
                     Always update to the latest and greatest.
                 </label>
                 </div>
                 <div class="form-check disabled">
                 <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" value="option3">
+                    <input type="radio" class="form-check-input" name="AutomaticUpdates" id="AutoUpdateToUnstable" value="AutoUpdateToUnstable">
                     Automatically update to unstable versions. I like to live on the edge.
                 </label>
                 </div>
@@ -71,67 +71,172 @@
 
             <fieldset class="form-group ">
                 <legend>Network Bandwidth</legend>
-                <p> <input type="text" id="maxBandwidth" aria-describedby="maxBandwidth" placeholder="Maximum Bandwidth"><label for="maxBandwidth">&nbsp;KB/s</label></p>
+                <p> <input type="text" id="maxBandwidth" aria-describedby="maxBandwidth" placeholder="Maximum Bandwidth"  name="MaximumBandwidth" id="MaximumBandwidth"><label for="maxBandwidth">&nbsp;KB/s</label></p>
                 <small id="emailHelp" class="form-text text-muted">Leaving 0 for maximum will make the bandwidth unlimited.</small>
             </fieldset>
-            <!--
-            <div class="form-group">
-                <label for="exampleInputPassword1">Password</label>
-                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
-            </div>
-            
-            <div class="form-group">
-                <label for="exampleSelect2">Example multiple select</label>
-                <select multiple class="form-control" id="exampleSelect2">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="exampleTextarea">Example textarea</label>
-                <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
-            </div>
-            <div class="form-group">
-                <label for="exampleInputFile">File input</label>
-                <input type="file" class="form-control-file" id="exampleInputFile" aria-describedby="fileHelp">
-                <small id="fileHelp" class="form-text text-muted">This is some placeholder block-level help text for the above input. It's a bit lighter and easily wraps to a new line.</small>
-            </div>
-            <fieldset class="form-group">
-                <legend>Radio buttons</legend>
-                <div class="form-check">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="option1" checked>
-                    Option one is this and that&mdash;be sure to include why it's great
-                </label>
-                </div>
-                <div class="form-check">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="option2">
-                    Option two can be something else and selecting it will deselect option one
-                </label>
-                </div>
-                <div class="form-check disabled">
-                <label class="form-check-label">
-                    <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" value="option3" disabled>
-                    Option three is disabled
-                </label>
-                </div>
-            </fieldset>
-            <div class="form-check">
-                <label class="form-check-label">
-                <input type="checkbox" class="form-check-input">
-                Check me out
-                </label>
-            </div>-->
-            <button type="submit" class="btn btn-success">Save</button>
+
+            <button type="button" onclick="saveSettings()" id="save" class="btn btn-success">Save</button>
+
         </form>
     </div>
     
     <script>
         window.jQuery = window.$ = require('jquery');
+
+        const fs = require('fs');
+
+        var path = 'C:\\Users\\' + process.env.username + '\\AppData\\Roaming\\.zerra\\Launcher\\Settings\\settings.json';
+        var def = 'default.json';
+
+        const form = document.getElementById('settings');
+
+        //Automatically set the values of the form according to the settings, if they exist.
+        if(fs.existsSync(path)) {
+            fs.readFile(path, 'utf8', function (err, data) {
+                if (err) {
+                    return console.log(err);
+                }
+
+                var jsonSettings = JSON.parse(data);
+
+                var elements = form.querySelectorAll( "input, select, textarea" );
+
+                for( var i = 0; i < elements.length; i++) {
+
+                    var element = elements[i];
+                    
+                    var value = jsonSettings[element.name];
+
+                    if(element.type === 'checkbox') {
+                        if(value == true) {
+                            element.checked = true;
+                            console.log('set checkbox with name ' + element.name + ' to true.');
+                        }else {
+                            element.checked = false;
+                            console.log('set checkbox with name ' + element.name + ' to false.');
+                        }
+                    }else if(element.type === 'radio') {
+                        if(jsonSettings[element.name] == element.id) {
+                            element.checked = true;
+                            console.log('set checkbox with name ' + element.name + ' to true.');
+                        }
+                    }else if(element.type === 'text') {
+                        element.value = value;
+                    }
+                }
+                console.log(jsonSettings);
+            });
+        }else {
+            fs.readFile(def, 'utf8', function (err, data) {
+                if (err) {
+                    return console.log(err);
+                }
+
+                var jsonSettings = JSON.parse(data);
+
+                var elements = form.querySelectorAll( "input, select, textarea" );
+
+                for( var i = 0; i < elements.length; i++) {
+
+                    var element = elements[i];
+                    
+                    var value = jsonSettings[element.name];
+
+                    if(element.type === 'checkbox') {
+                        if(value == true) {
+                            element.checked = true;
+                            console.log('set checkbox with name ' + element.name + ' to true.');
+                        }else {
+                            element.checked = false;
+                            console.log('set checkbox with name ' + element.name + ' to false.');
+                        }
+                    }else if(element.type === 'radio') {
+                        if(jsonSettings[element.name] == element.id) {
+                            element.checked = true;
+                            console.log('set checkbox with name ' + element.name + ' to true.');
+                        }
+                    }else if(element.type === 'text') {
+                        element.value = value;
+                    }
+                }
+                console.log(jsonSettings);
+            });
+        }
+        
+
+        //Save the settings of the form once the user presses the save button.
+        function saveSettings() {
+
+            const data = toJSONString(form);
+
+            //Writing to the settings file.
+            if (fs.existsSync(path)) {
+                fs.writeFileSync(path, data, { flag: 'w' }, function(err) {
+                    if(err) {
+                        console.log(err);
+                    }else {
+                        console.log('The file was saved!');
+                    }
+                });
+            }else {
+                fs.writeFileSync(path, data, { flag: 'wx' }, function(err) {
+                    if(err) {
+                        console.log(err);
+                    }else {
+                        console.log('The file was saved!');
+                    }
+                });
+            }
+
+            const remote = require('electron').remote;
+            var window = remote.getCurrentWindow();
+            window.close(); 
+        }
+
+        //Convert the form to a JSON format.
+        function toJSONString(form) {
+
+            var obj = {};
+
+            var elements = form.querySelectorAll( "input, select, textarea" );
+
+            for( var i = 0; i < elements.length; ++i ) {
+                var element = elements[i];
+                var name = element.name;
+
+                var value = null;
+                if(element.type === 'checkbox') {
+                    if(element.checked) {
+                        value = true;
+                    }else {
+                        value = false;
+                    }
+                    //We want the bandwidth to be a number, not a string.
+                }else if(element.name == "MaximumBandwidth") {
+                    value = parseInt(element.value, 10);
+                }else if(element.type === "radio") {
+
+                    //Radio buttons are wonky to work with, so this check system makes them less of a pain to write to JSON.
+                    if(element.checked == true) {
+                        value = element.value;
+                        if( name ) {
+                            obj[ name ] = value;
+                        }
+                    }
+                }
+
+                //Exclude radio buttons.
+                if(element.type !== 'radio') {
+                    if( name ) {
+                        obj[ name ] = value;
+                    }
+                }
+                
+            }
+
+            return JSON.stringify( obj );
+        }
+
     </script>
     <script src="node_modules/popper.js/dist/umd/popper.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
