@@ -1,4 +1,6 @@
 # dependencies
 node_modules/
-release-builds/
 package-lock.json
+release-builds/zerra-launcher-win32-ia32/
+*.nupkg
+RELEASES
