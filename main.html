@@ -32,7 +32,7 @@
 
                         //TODO: If there are no instances in the folder, don't bother checking. The user will have to create a new instance.
                         dialog.showOpenDialog({
-                                properties: ['openDirectory', 'multiSelections'],
+                                properties: ['openDirectory'],
                                 defaultPath: 'C:\\Users\\' + process.env.username + '\\AppData\\Roaming\\.zerra\\instances\\'
                         }, function (files) {
                                 if (files !== undefined) {
