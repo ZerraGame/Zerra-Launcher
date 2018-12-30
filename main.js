@@ -8,6 +8,14 @@ process.env.NODE_ENV = 'development';
 
 let mainWindow;
 
+//init some directories
+const zerra_path = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/';
+
+var mkdirp = require('mkdirp');
+
+mkdirp(zerra_path + "/Instances/", {});
+mkdirp(zerra_path + "/Settings/", {});
+
 // Listen for app to be ready
 app.on('ready', function() {
     // Create new window

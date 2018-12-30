@@ -85,7 +85,7 @@
 
         const fs = require('fs');
 
-        var path = 'C:\\Users\\' + process.env.username + '\\AppData\\Roaming\\.zerra\\Launcher\\Settings\\settings.json';
+        var path = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Settings/settings.json';
         var def = 'default.json';
 
         const form = document.getElementById('settings');
@@ -170,6 +170,7 @@
             const data = toJSONString(form);
 
             //Writing to the settings file.
+            
             if (fs.existsSync(path)) {
                 fs.writeFileSync(path, data, { flag: 'w' }, function(err) {
                     if(err) {
