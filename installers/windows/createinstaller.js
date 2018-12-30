@@ -15,7 +15,7 @@ function getInstallerConfig () {
 
   return Promise.resolve({
     appDirectory: path.join(outPath, 'zerra-launcher-win32-ia32/'),
-    authors: 'Christian Engvall',
+    authors: 'Zerra Dev Team',
     noMsi: true,
     outputDirectory: path.join(outPath, 'windows-installer'),
     exe: 'zerra-launcher.exe',
