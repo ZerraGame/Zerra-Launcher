@@ -15,9 +15,7 @@
         <div class="play">
                 <div class="btn-group">
                         <button type="button" class="btn playbtn btn-success disabled" id="play">Play</button>
-                        <button type="button" class="btn playbtn btn-success dropdown-toggle dropdown-toggle-split">
-                                <input type="file" id="instanceSelector" oninput="changeInstanceView()" webkitdirectory directory multiple>
-                        </button>
+                        <button type="button" onclick="getInstance()" class="btn playbtn btn-success dropdown-toggle dropdown-toggle-split"></button>
                 </div>
         </div>
         <div class="instanceView">
@@ -28,33 +26,24 @@
         
 
         <script>
+                function getInstance() {
+                        
+                        const { dialog } = require('electron').remote;
 
-                function createVersionWindow() {
-
-                        const {shell} = require('electron'); // deconstructing assignment
-
-                        shell.openItem('C:\\');
-
-                        /*
-                        const electron = require('electron');
-                        const BrowserWindow = electron.remote.BrowserWindow;
-
-                        const childWindow = new BrowserWindow({
-                        width: 300,
-                        height: 200,
-                        alwaysOnTop: true,
-                        resizable: false
+                        //TODO: If there are no instances in the folder, don't bother checking. The user will have to create a new instance.
+                        dialog.showOpenDialog({
+                                properties: ['openDirectory', 'multiSelections'],
+                                defaultPath: 'C:\\Users\\' + process.env.username + '\\AppData\\Roaming\\.zerra\\instances\\'
+                        }, function (files) {
+                                if (files !== undefined) {
+                                        //TODO: Handle this.
+                                }
                         });
-
-                        childWindow.on('closed', () => {
-                                childWindow = null;
-                        });*/
                 }
 
                 function changeInstanceView() {
                         document.getElementById("instance").value = document.getElementById("instanceSelector").files[0].path;
                         document.getElementById("play").classList.remove("disabled");
-                        
                 }
         </script>
         <script>
