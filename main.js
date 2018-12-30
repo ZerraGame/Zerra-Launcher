@@ -15,7 +15,7 @@ app.on('ready', function() {
         width: 850,
         height: 500,
         resizable: false,
-        icon: path.join(__dirname, 'icon.png')
+        icon: path.join(__dirname, 'assets/res/icon.png')
     });
 
     mainWindow.setMenu(null);
