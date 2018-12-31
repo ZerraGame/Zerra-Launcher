@@ -38,12 +38,17 @@ app.on('ready', function() {
     }));
 
     //Register keybindings
-    globalShortcut.register('CommandOrControl+R', () => {
-        const window = require('electron').BrowserWindow;
-        window.getFocusedWindow().reload();
-    });
+    if(process.env.NODE_ENV == 'development') {
+        globalShortcut.register('CommandOrControl+R', () => {
+            const window = require('electron').BrowserWindow;
+            window.getFocusedWindow().reload();
+        });
 
-    if(process.env.NODE_ENV !== 'production') {
+        globalShortcut.register('F5', () => {
+            const window = require('electron').BrowserWindow;
+            window.getFocusedWindow().reload();
+        });
+
         globalShortcut.register('CommandOrControl+I', () => {
             const window = require('electron').BrowserWindow;
             window.getFocusedWindow().openDevTools();
