@@ -19,6 +19,8 @@
                             aria-selected="false">Updates</a>
                         <a class="nav-link" id="v-pills-networking-tab" data-toggle="pill" href="#v-pills-networking" role="tab" aria-controls="v-pills-networking"
                             aria-selected="false">Networking</a>
+                        <a class="nav-link" id="v-pills-patch-tab" data-toggle="pill" href="#v-pills-patch" role="tab" aria-controls="v-pills-patch"
+                            aria-selected="true">Patch Notes</a>
                         <a class="nav-link" id="v-pills-about-tab" data-toggle="pill" href="#v-pills-about" role="tab" aria-controls="v-pills-about"
                             aria-selected="true">About</a>
                     </div>
@@ -35,6 +37,10 @@
                                 <br>
                                 <label class="form-check-label">
                                     <input type="checkbox" class="form-check-input" name="NoLaunchDuringUpdate" id="NoLaunchDuringUpdate"> Prevent launching during an update.
+                                </label>
+                                <br>
+                                <label class="form-check-label">
+                                    <input type="checkbox" class="form-check-input" name="CloseAfterLaunch" id="CloseAfterLaunch"> Close the launcher after starting the game.
                                 </label>
                                 <br>
                                 <label class="form-check-label">
@@ -72,46 +78,29 @@
                         </div>
                         <div class="tab-pane fade" id="v-pills-networking" role="tabpanel" aria-labelledby="v-pills-networking-tab">
                             <fieldset class="form-group ">
-                                <legend>Network Bandwidth</legend>
+                                <legend>Networking</legend>
                                 <p>
-                                    <input type="text" id="maxBandwidth" aria-describedby="maxBandwidth" placeholder="Maximum Bandwidth" name="MaximumBandwidth"
+                                    <input type="text" id="MaxBandwidth" aria-describedby="MaxBandwidth" placeholder="Maximum Bandwidth" name="MaximumBandwidth"
                                         id="MaximumBandwidth">
                                     <label for="maxBandwidth">&nbsp;KB/s</label>
                                 </p>
                                 <small id="emailHelp" class="form-text text-muted">Leaving 0 for maximum will make the bandwidth unlimited.</small>
+
+                                <br>
+                                <legend>Queuing</legend>
+                                <p>
+                                    <input type="text" id="QueueSize" aria-describedby="QueueSize" placeholder="QueueSize" name="QueueSize" id="QueueSize">
+                                </p>
                             </fieldset>
+                        </div>
+                        <div class="tab-pane fade" id="v-pills-patch" role="tabpanel" aria-labelledby="v-pills-patch-tab">
+                            <p>
+                                Patch Notes.
+                            </p>
                         </div>
                         <div class="tab-pane fade" id="v-pills-about" role="tabpanel" aria-labelledby="v-pills-about-tab">
                             <p>
-                                Lorem ipsum dolor sit amet, luptatum adolescens argumentum vel eu, quis erant philosophia cum eu, ne oratio forensibus per.
-                                Vero efficiantur his ad. Eu tantas feugait cum, nobis impetus quo an. Elit reformidans at
-                                ius, decore delicata senserit ius te, id erant scribentur duo. Ex quo solet delectus quaestio,
-                                ex habeo altera senserit has. Vide fabulas duo et, ut elit mandamus conceptam duo, sea dicit
-                                laudem vulputate eu. Quo eu odio tation ignota. Ius solet eirmod accusam cu, ex novum interesset
-                                nam. Ne duo docendi copiosae disputationi. Id est malorum interesset. Mucius democritum vituperata
-                                mea no, ne habemus signiferumque vis. Ei his possim lobortis indoctum. Ullum tibique has
-                                ne. Ex sea facilisi voluptatibus, est no vero nemore suscipit. Nibh audire pericula nam eu,
-                                cu has persius consectetuer. In solet elaboraret ius, postea viderer ei vel, insolens percipitur
-                                mea no. In usu nihil scripta adversarium. Mei id stet euismod cotidieque, ne errem referrentur
-                                conclusionemque mei. Per ferri nonumy an, ius eu altera graeci, cetero atomorum ad qui. Ex
-                                vel malorum fabulas fabellas, nullam apeirian eum ex. Putent accusam et his, an eam malorum
-                                nonumes. Te ius stet consequat, vis no primis semper antiopam, qui voluptaria contentiones
-                                ei. Ei pro homero adipiscing, in eum rebum justo nullam. Nostrud ocurreret referrentur in
-                                eos, at modo posse cum. Eius iudico volumus sit an, nam munere prompta suavitate at, cu hinc
-                                prompta eum. Eum ipsum exerci ea, an qui prima audiam utroque, his ei appareat menandri.
-                                Docendi tractatos ne cum, ne liberavisse intellegebat mea. Qui ei ferri honestatis. Qui ne
-                                insolens intellegebat. Pri affert aeterno ex, no euismod assentior mei, eu est tale timeam.
-                                Quem harum altera vis ex, tempor convenire elaboraret quo id. Pri praesent signiferumque
-                                at. Eam veniam fabellas forensibus ea. Natum lorem est eu, graece atomorum mel at. Perpetua
-                                mnesarchum consetetur his no, cu graece dolores sea, cum gloriatur referrentur eu. Sed etiam
-                                aliquam explicari te, summo nonumy molestiae in eum. Vide dolores his in, ex pro ornatus
-                                accusam. Mucius neglegentur id nec, prima imperdiet in has. Vis in mollis iriure disputando,
-                                mollis theophrastus mei ut. Quas adversarium eum ex, graecis fabellas id sed. No clita corrumpit
-                                cum, et ludus dicam mei. Melius volumus cum et, vix paulo deserunt electram ei, oblique partiendo
-                                explicari cu mel. Sit cu vero putant ancillae, cum atqui periculis urbanitas te. Ut vix ubique
-                                graeci legimus, vel ex option insolens. Pri aeque patrioque ut, bonorum recusabo eu per.
-                                No vix malorum incorrupte. Eius aliquip in qui. Id nam nominati rationibus, ex sea solum
-                                impedit noluisse. Ne persecuti dissentiet duo, eu est blandit menandri.
+                                Test paragraph.
                             </p>
                         </div>
                     </div>
@@ -256,10 +245,11 @@
                         value = false;
                     }
                     //We want the bandwidth to be a number, not a string.
-                } else if (element.name == "MaximumBandwidth") {
+                }  else if (element.name == "MaximumBandwidth" || element.name == "QueueSize") {
                     value = parseInt(element.value, 10);
-                } else if (element.type === "radio") {
-
+                } else if(element.type === 'text'){
+                    value = element.value;
+                }else if (element.type === "radio") {
                     //Radio buttons are wonky to work with, so this check system makes them less of a pain to write to JSON.
                     if (element.checked == true) {
                         value = element.value;
@@ -267,6 +257,8 @@
                             obj[name] = value;
                         }
                     }
+                }else {
+                    value = element.value;
                 }
 
                 //Exclude radio buttons.
