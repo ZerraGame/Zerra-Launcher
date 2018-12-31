@@ -43,6 +43,14 @@ app.on('ready', function() {
         window.getFocusedWindow().reload();
     });
 
+    if(process.env.NODE_ENV !== 'production') {
+        globalShortcut.register('CommandOrControl+I', () => {
+            const window = require('electron').BrowserWindow;
+            window.getFocusedWindow().openDevTools();
+        });
+    }
+    
+
     //Quit app when closed
     mainWindow.on('closed', function() {
         app.quit();

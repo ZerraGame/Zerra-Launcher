@@ -1,1 +1,1 @@
-{"NotifyUpdates":true,"NoLaunchDuringUpdate":true,"RememberEmail":true,"KeepLoggedIn":true,"SendCrashReports":true,"AutomaticUpdates":"AutoUpdate","MaximumBandwidth":0,"QueueSize":3}
+{"NotifyUpdates":true,"NoLaunchDuringUpdate":true,"CloseAfterLaunch":true,"RememberEmail":true,"KeepLoggedIn":true,"SendCrashReports":true,"AutomaticUpdates":"AutoUpdate","MaximumBandwidth":0,"QueueSize":3}
