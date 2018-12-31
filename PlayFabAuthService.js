@@ -17,6 +17,10 @@ function Load() {
         $("#login").click(function () {
                 TryLogin();
         });
+
+        $("#register").click(function () {
+                TryRegister();
+        });
 }
 
 function TryLogin() {
@@ -32,11 +36,16 @@ function TryLogin() {
 }
 
 function TryRegister() {
+        if (document.getElementById("RegisterPassword").value !== document.getElementById("RegisterRepeatPassword").value) {
+                document.getElementById("registerAlertText").innerHTML = "Passwords do not match!";
+                return
+        }
+
         // Create a register request for PlayFab
         var registerRequest = {
-                Username: "",
-                Email: "",
-                Password: "",
+                Username: document.getElementById("RegisterUsername").value,
+                Email: document.getElementById("RegisterEmail").value,
+                Password: document.getElementById("RegisterPassword").value,
                 TitleId: PlayFab.settings.titleId
         };
 
@@ -47,19 +56,25 @@ function TryRegister() {
 var LoginCallback = function (result, error) {
         if (result !== null) {
                 // What will happen after the login is successful? Go crazy!
-                document.getElementById("alertText").innerHTML = "Successfully logged-in!";
+                document.getElementById("loginAlertText").innerHTML = "Successfully logged-in!";
+
+                // Close the login modal
+                $('#accountModal').modal('hide');
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
-                document.getElementById("alertText").innerHTML = "Oops! There was a problem!";
+                document.getElementById("loginAlertText").innerHTML = "Oops! There was a problem!";
         }
 }
 
 var RegisterCallBack = function (result, error) {
         if (result !== null) {
                 // What will happen after the register is successful? Go crazy!
-                document.getElementById("alertText").innerHTML = "Successfully registered account!";
+                document.getElementById("registerAlertText").innerHTML = "Successfully registered account!";
+
+                // Close the register modal
+                $('#registerModal').modal('hide');
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
-                document.getElementById("alertText").innerHTML = "Oops! There was a problem!";
+                document.getElementById("registerAlertText").innerHTML = "Oops! There was a problem!";
         }
 }
