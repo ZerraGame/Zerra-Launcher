@@ -9,7 +9,19 @@
 
 <body>
         <div class="tray">
-                <button type="button" data-toggle="modal" data-target="" class="accountbtn btn btn-success" id="accountInfoBtn"></button>
+                <div>
+                        <button type="button" class="accountbtn btn btn-success dropdown-toggle" type="button" id="AccountInfo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="accountInfoBtn"></button>
+                        <div class="dropdown-menu" aria-labelledby="AccountInfo">
+                                <a class="dropdown-item" href="#"><span class="dot online"></span> Online</a>
+                                <a class="dropdown-item" href="#"><span class="dot away"></span> Away</a>
+                                <a class="dropdown-item" href="#"><span class="dot busy"></span> Busy</a>
+                                <a class="dropdown-item" href="#"><span class="dot offline"></span> Offline</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">View Profile</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Sign Out</a>
+                        </div>
+                </div>
                 <button type="button" data-toggle="modal" data-target="#accountModal" class="accountbtn btn btn-success" id="signInBtn">Sign In</button>
                 <button type="button" onclick="openSettings()" class="settingsbtn"></button>
         </div>

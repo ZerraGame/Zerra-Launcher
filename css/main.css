@@ -61,3 +61,30 @@ input[type=file] {
     top: 0;
     opacity: 0;
 }
+
+.status-icon {
+    display: inline;
+}
+
+.dot {
+    height: 13px;
+    width: 13px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.online {
+    background-color: rgb(48, 165, 64);
+}
+
+.away {
+    background-color: rgb(231, 228, 39);
+}
+
+.busy {
+    background-color: rgb(219, 44, 44);
+}
+
+.offline {
+    background-color: rgb(92, 92, 92);
+}

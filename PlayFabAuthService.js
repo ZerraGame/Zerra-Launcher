@@ -69,7 +69,7 @@ var LoginCallback = function (result, error) {
                 PlayFabClientSDK.GetAccountInfo(getAccountInfoRequest, function (infoResult, infoError) {
                         if (infoResult !== null) {
                                 // What will happen after the register is successful? Go crazy!
-                                document.getElementById("accountInfoBtn").innerHTML = infoResult.data.AccountInfo.Username; //"Successfully requested account!";
+                                document.getElementById("AccountInfo").innerHTML = infoResult.data.AccountInfo.Username; //"Successfully requested account!";
                         } else if (infoError !== null) {
                                 // Do whatever you want to do with errors here.
                         }
