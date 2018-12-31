@@ -1,20 +1,20 @@
 body {
-    background-image: url("assets/res/background.png");
+    background-image: url('../assets/res/background.png');
     background-repeat: no-repeat;
     background-size: cover;
 }
 
 .play {
     bottom: 50px;
-    left: calc(50% - 2.5em);
+    left: calc(50% - 3.5em);
     position: fixed;
 }
 
 .instanceView {
     bottom: 10px;
-    left: calc(50% - 12em);
+    left: calc(50% - 24em);
     position: fixed;
-    width: 400px;
+    width: 90%;
 }
 
 #instance {
@@ -23,6 +23,13 @@ body {
 }
 
 .playbtn {
+    padding: 10px;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-size: 20px;
+}
+
+.instancebtn {
     padding: 10px;
     font-size: 20px;
 }
@@ -35,7 +42,7 @@ body {
 }
 
 .settingsbtn {
-    background:url(assets/res/gear.png);
+    background:url('../assets/res/gear.png');
     background-repeat: no-repeat;
     background-size: cover;
     cursor:pointer;
