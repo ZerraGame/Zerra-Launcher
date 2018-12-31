@@ -60,6 +60,20 @@ var LoginCallback = function (result, error) {
 
                 // Close the login modal
                 $('#accountModal').modal('hide');
+                $('#signInBtn').hide();
+                
+                var getAccountInfoRequest = {
+                        "PlayFabId": result.data.PlayFabId
+                };
+
+                PlayFabClientSDK.GetAccountInfo(getAccountInfoRequest, function (infoResult, infoError) {
+                        if (infoResult !== null) {
+                                // What will happen after the register is successful? Go crazy!
+                                document.getElementById("accountInfoBtn").innerHTML = infoResult.data.AccountInfo.Username; //"Successfully requested account!";
+                        } else if (infoError !== null) {
+                                // Do whatever you want to do with errors here.
+                        }
+                });
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
                 document.getElementById("loginAlertText").innerHTML = "Oops! There was a problem!";
