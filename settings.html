@@ -3,7 +3,7 @@
 <head>
     <title>Settings</title>
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="settings.css">
+    <link rel="stylesheet" type="text/css" href="css/settings.css">
 </head>
 <body>
     <div id="wrapper">
@@ -86,7 +86,7 @@
         const fs = require('fs');
 
         var path = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Settings/settings.json';
-        var def = 'default.json';
+        var def = 'defaults/settings.json';
 
         const form = document.getElementById('settings');
 
