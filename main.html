@@ -9,8 +9,8 @@
 
 <body>
         <div class="tray">
-                        <button type="button" data-toggle="modal" data-target="#accountModal" class="accountbtn btn-success">Sign In</button>
-                        <button type="button" onclick="openSettings()" class="settingsbtn"></button>
+                <button type="button" data-toggle="modal" data-target="#accountModal" class="accountbtn btn-success">Sign In</button>
+                <button type="button" onclick="openSettings()" class="settingsbtn"></button>
         </div>
 
         <div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="accountModalLabel" aria-hidden="true">
@@ -19,7 +19,7 @@
                                 <div class="modal-header">
                                         <h5 class="modal-title" id="accountModalLabel">Sign In</h5>
                                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
+                                                <span aria-hidden="true">&times;</span>
                                         </button>
                                 </div>
                                 <div class="modal-body">
@@ -34,7 +34,9 @@
                                                 <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" required>
                                         </div>
                                         <div class="form-group">
-                                                <small id="emailHelp" class="form-text text-muted">Don't have an account? <a href="#">register here</a>.</a></small>
+                                                <small id="emailHelp" class="form-text text-muted">Don't have an account?
+                                                        <a href="#">register here</a>.</a>
+                                                </small>
                                         </div>
                                 </div>
                                 <div class="modal-footer">
@@ -56,11 +58,11 @@
                         <input type="text" class="form-control" id="instance" placeholder="instance location..." readonly>
                 </div>
         </div>
-        
+
 
         <script>
                 function getInstance() {
-                        
+
                         const { dialog } = require('electron').remote;
 
                         //TODO: If there are no instances in the folder, don't bother checking. The user will have to create a new instance.
@@ -90,17 +92,17 @@
                         });
                         //TODO:
                         //settings.openDevTools();
-                        settings.setMenu(null); 
+                        settings.setMenu(null);
 
                         // Load html into window
                         settings.loadURL(url.format({
                                 pathname: path.join(__dirname, 'settings.html'),
-                                protocol:'file:',
+                                protocol: 'file:',
                                 slashes: true
                         }));
 
                         //Garbage collection.
-                        settings.on('closed', function() {
+                        settings.on('closed', function () {
                                 settings = null;
                         });
                 }
@@ -111,4 +113,5 @@
         <script src="node_modules/popper.js/dist/umd/popper.js"></script>
         <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
 </body>
+
 </html>
