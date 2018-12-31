@@ -22,8 +22,8 @@ function Load() {
 function TryLogin() {
         // Create a login request for PlayFab
         var loginRequest = {
-                Email: document.getElementById("exampleInputEmail1").value,
-                Password: document.getElementById("exampleInputPassword1").value,
+                Email: document.getElementById("AccountEmail").value,
+                Password: document.getElementById("AccountPassword").value,
                 TitleId: PlayFab.settings.titleId
         };
 

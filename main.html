@@ -13,7 +13,8 @@
                 <button type="button" onclick="openSettings()" class="settingsbtn"></button>
         </div>
 
-        <div class="modal fade" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="accountModalLabel" aria-hidden="true">
+        <!-- Sign In Modal -->
+        <div class="modal fade close-modal" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="accountModalLabel" aria-hidden="true">
                 <div class="modal-dialog" role="document">
                         <div class="modal-content">
                                 <div class="modal-header">
@@ -24,18 +25,16 @@
                                 </div>
                                 <div class="modal-body">
                                         <div class="form-group">
-                                                <label for="exampleInputEmail1">Email Address</label>
-                                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" required>
+                                                <input type="email" class="form-control" id="AccountEmail" aria-describedby="emailHelp" placeholder="Email Address" required>
                                                 <!-- TODO: Update this feedback div if the login fails. -->
                                                 <div class="form-control-feedback"></div>
                                         </div>
                                         <div class="form-group">
-                                                <label for="exampleInputPassword1">Password</label>
-                                                <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password" required>
+                                                <input type="password" class="form-control" id="AccountPassword" placeholder="Password" required>
                                         </div>
                                         <div class="form-group">
                                                 <small id="emailHelp" class="form-text text-muted">Don't have an account?
-                                                        <a href="#">register here</a>.</a>
+                                                        <a href="#" onclick="manageModals()">register here</a>.
                                                 </small>
                                         </div>
                                 </div>
@@ -43,6 +42,43 @@
                                         <p id="alertText"></p>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button type="button" class="btn btn-success" id="login">Sign In</button>
+                                </div>
+                        </div>
+                </div>
+        </div>
+
+        <!-- Register Modal -->
+        <div class="modal fade close-modal" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                                <div class="modal-header">
+                                        <h5 class="modal-title" id="registerModalLabel">Register</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                        <div class="form-group">
+                                                <input type="email" class="form-control" id="RegisterEmail" aria-describedby="emailHelp" placeholder="Email" required>
+                                                <!-- TODO: Update this feedback div if the login fails. -->
+                                                <div class="form-control-feedback"></div>
+                                        </div>
+                                        <div class="form-group">
+                                                <input type="text" class="form-control" id="RegisterUsername" aria-describedby="username" placeholder="Username" required>
+                                                <!-- TODO: Update this feedback div if the login fails. -->
+                                                <div class="form-control-feedback"></div>
+                                        </div>
+                                        <div class="form-group">
+                                                <input type="password" class="form-control" id="RegisterPassword" placeholder="Password" required>
+                                        </div>
+                                        <div class="form-group">
+                                                <input type="password" class="form-control" id="RegisterRepeatPassword" placeholder="Repeat Password" required>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                        <p id="alertText"></p>
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                        <button type="button" class="btn btn-success" id="login">Register</button>
                                 </div>
                         </div>
                 </div>
@@ -110,6 +146,11 @@
         </script>
         <script>
                 window.jQuery = window.$ = require('jquery');
+
+                function manageModals() {
+                        $('#accountModal').modal('hide');
+                        $('#registerModal').modal('show');
+                }
         </script>
         <script src="node_modules/popper.js/dist/umd/popper.js"></script>
         <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
