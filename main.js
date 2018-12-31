@@ -2,7 +2,7 @@ const electron = require('electron');
 const url = require('url');
 const path = require('path');
 
-const {app, BrowserWindow, Menu} = electron;
+const {app, BrowserWindow, Menu, globalShortcut} = electron;
 
 process.env.NODE_ENV = 'development';
 
@@ -18,6 +18,7 @@ mkdirp(zerra_path + "/Settings/", {});
 
 // Listen for app to be ready
 app.on('ready', function() {
+
     // Create new window
     mainWindow = new BrowserWindow({
         width: 850,
@@ -35,6 +36,12 @@ app.on('ready', function() {
         protocol:'file:',
         slashes: true
     }));
+
+    //Register keybindings
+    globalShortcut.register('CommandOrControl+R', () => {
+        const window = require('electron').BrowserWindow;
+        window.getFocusedWindow().reload();
+    });
 
     //Quit app when closed
     mainWindow.on('closed', function() {
