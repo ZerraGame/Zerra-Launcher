@@ -1,4 +1,15 @@
 #wrapper {
-    margin-left: 25px;
+    margin-left: 35px;
+    margin-right: 35px;
     margin-top: 30px;
+}
+
+#save {
+    position: fixed;
+    left: 15%;
+    bottom: 5%;
+}
+
+.content {
+    margin-left: 5%;
 }
