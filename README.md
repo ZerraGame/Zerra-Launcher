@@ -33,4 +33,5 @@ Our launcher uses the following main dependencies:
 * Mkdirp
 * Electron Packager (dev)
 * Electron Winstaller (dev)
+
 By using the command ``npm install``, you are installing these dependencies. This section is here for your convenience and to inform you of what is going on with the dependencies. Of course, you can always see **package.json** to see the dependencies the project makes use of.
