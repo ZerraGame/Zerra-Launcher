@@ -74,7 +74,7 @@
 							<div class="modal-footer">
 									<p id="alertText"></p>
 									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-									<button type="button" class="btn btn-success" onclick="createInstance()" id="login">Create</button>
+									<button type="button" class="btn btn-success" onclick="createInstance()" id="createInstance">Create</button>
 							</div>
 					</div>
 			</div>
@@ -114,7 +114,7 @@
 		function createInstance(){
 			newInstance_name = $("#nameInput").val();
 			if(newInstance_name && newInstance_name != ""){ //Check if user filled out the name
-				if(newInstance_name.length <= 12){
+				if(newInstance_name.length <= 32){
 					if(newInstance_img){ //Check if user picked an image
 						if(newInstance_ver != null){ //Check if user picked a version
 							if(!fs.existsSync(zpath+newInstance_name+"/")){ //Basically check if there is an instance with the same name
@@ -146,31 +146,32 @@
 									if(!err){
 										fs.copyFile(newInstance_img.src, zpath+newInstance_name+"/logo"+path.extname(newInstance_img.src), function(err){ //Save a logo
 											if(!err){
-												$('#newInstanceModal').modal('hide');
+												return console.log('TRUE');
 											}else{
 												console.log(err);
 												console.log(newInstance_img.src);
 												//$("#alertText").text("There was an error while saving.");
 											}
 										});
+										$('#newInstanceModal').modal('hide');
 									}else{
-										$("#alertText").text("There was an error while saving.");
+										$("#alertText").text("There was an error while saving!");
 									}
 								});
 							}else{
-								$("#alertText").text("An instance with same name already exists!");
+								$("#alertText").text("An instance with that name already exists!");
 							}
 						}else{
-							$("#alertText").text("Pick a version!");
+							$("#alertText").text("No version selected!");
 						}
 					}else{
-						$("#alertText").text("Pick an image!");
+						$("#alertText").text("No icon selected!");
 					}
 				}else{
-					$("#alertText").text("A name can have maximum of 12 characters!");
+					$("#alertText").text("The instance name can be no greater than 32 characters!");
 				}
 			}else{
-				$("#alertText").text("Fill in a name!");
+				$("#alertText").text("The name of the instance is not valid!");
 			}
 		}
 
@@ -206,7 +207,7 @@
 								}
 								document.getElementById('previewImg').src = files[0]+'?'+new Date().getTime();
 							}else{
-								$("#alertText").text("Selected image's size isn't power of 2.");
+								$("#alertText").text("Selected image's size isn't a power of 2.");
 							}
 						}else{
 							$("#alertText").text("Selected image isn't a square.");
