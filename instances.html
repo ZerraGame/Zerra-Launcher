@@ -17,6 +17,7 @@
 		<div id="instances"> <!--Load all instances when this div has loaded-->
 			<!--Store instances-->
 		</div>
+		<!--New Instance Modal-->
 		<div class="modal fade" id="newInstanceModal" tabindex="-1" role="dialog" aria-labelledby="newInstanceModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
@@ -78,6 +79,40 @@
 						<p id="alertText"></p>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-success" onclick="createInstance()" id="createInstance">Create</button>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!--Import Instance Modal-->
+		<div class="modal fade" id="impInstanceModal" tabindex="-1" role="dialog" aria-labelledby="impInstanceModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="impInstanceModalLabel">Import Instance</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="exampleInputPassword1">Instance</label>
+							<br>
+							<button type="button" class="btn btn-primary" onclick="impInstanceSelect()" id="img-choose">Select Instance</button>
+							<br>
+							<br>
+							<label id="impInstance_name" for="exampleInputPassword1"></label>
+							<br>
+							<br>
+							<label id="impInstance_img" for="exampleInputPassword1"></label>
+							<br>
+							<img id="impInstance_previmg"></img>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<p id="alertText"></p>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-success" onclick="importInstance()" id="importInstance">Import</button>
 					</div>
 				</div>
 			</div>
