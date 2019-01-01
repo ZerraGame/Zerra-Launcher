@@ -8,8 +8,8 @@ function Load() {
         // Read our playfab settings JSON file
         const fs = require('fs');
 
-        let fileContents = fs.readFileSync('playfab_settings.json');  
-        let jsonContents = JSON.parse(fileContents);  
+        let fileContents = fs.readFileSync('playfab_settings.json');
+        let jsonContents = JSON.parse(fileContents);
 
         PlayFab.settings.titleId = jsonContents.database_key;
 
@@ -21,11 +21,20 @@ function Load() {
         $("#register").click(function () {
                 TryRegister();
         });
+
+        $("#signout").click(function () {
+                SignOut();
+        });
+}
+
+function SignOut() {
+
 }
 
 function TryLogin() {
         // Create a login request for PlayFab
         var loginRequest = {
+
                 Email: document.getElementById("AccountEmail").value,
                 Password: document.getElementById("AccountPassword").value,
                 TitleId: PlayFab.settings.titleId
@@ -61,16 +70,17 @@ var LoginCallback = function (result, error) {
                 // Close the login modal
                 $('#accountModal').modal('hide');
                 $('#signInBtn').hide();
-                
-                var getAccountInfoRequest = {
-                        "PlayFabId": result.data.PlayFabId
-                };
 
-                PlayFabClientSDK.GetAccountInfo(getAccountInfoRequest, function (infoResult, infoError) {
-                        if (infoResult !== null) {
+                PlayFabClientSDK.GetPlayerProfile({
+                        PlayFabId: result.data.PlayFabId,
+                        ProfileConstraints: {
+                                ShowDisplayName: true
+                        }
+                }, function (response, error) {
+                        if (response !== null) {
                                 // What will happen after the register is successful? Go crazy!
-                                document.getElementById("AccountInfo").innerHTML = infoResult.data.AccountInfo.Username; //"Successfully requested account!";
-                        } else if (infoError !== null) {
+                                document.getElementById("AccountInfo").innerHTML = response.data.PlayerProfile.DisplayName; //Username; //"Successfully requested account!";
+                        } else if (error !== null) {
                                 // Do whatever you want to do with errors here.
                         }
                 });
@@ -87,6 +97,12 @@ var RegisterCallBack = function (result, error) {
 
                 // Close the register modal
                 $('#registerModal').modal('hide');
+
+                PlayFabClientSDK.UpdateUserTitleDisplayName({
+                        DisplayName: document.getElementById("RegisterUsername").value
+                }, function (response, error) {
+                        
+                });
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
                 document.getElementById("registerAlertText").innerHTML = "Oops! There was a problem!";
