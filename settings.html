@@ -44,7 +44,7 @@
                                 </label>
                                 <br>
                                 <label class="form-check-label">
-                                    <input type="checkbox" class="form-check-input" name="RememberEmail" id="RememberEmail"> Remember my email address.
+                                    <input type="checkbox" class="form-check-input" name="RememberInfo" id="RememberInfo"> Remember my login information.
                                 </label>
                                 <br>
                                 <label class="form-check-label">
@@ -138,7 +138,7 @@
                     var element = elements[i];
 
                     var value = jsonSettings[element.name];
- 
+
                     if (element.type === 'checkbox') {
                         if (value == true) {
                             element.checked = true;
@@ -245,11 +245,11 @@
                         value = false;
                     }
                     //We want the bandwidth to be a number, not a string.
-                }  else if (element.name == "MaximumBandwidth" || element.name == "QueueSize") {
+                } else if (element.name == "MaximumBandwidth" || element.name == "QueueSize") {
                     value = parseInt(element.value, 10);
-                } else if(element.type === 'text'){
+                } else if (element.type === 'text') {
                     value = element.value;
-                }else if (element.type === "radio") {
+                } else if (element.type === "radio") {
                     //Radio buttons are wonky to work with, so this check system makes them less of a pain to write to JSON.
                     if (element.checked == true) {
                         value = element.value;
@@ -257,7 +257,7 @@
                             obj[name] = value;
                         }
                     }
-                }else {
+                } else {
                     value = element.value;
                 }
 
