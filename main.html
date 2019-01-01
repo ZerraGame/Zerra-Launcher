@@ -10,12 +10,17 @@
 <body>
         <div class="tray">
                 <div>
-                        <button type="button" class="accountbtn btn btn-success dropdown-toggle" type="button" id="AccountInfo" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="accountInfoBtn"></button>
+                        <button type="button" class="accountbtn btn btn-success dropdown-toggle" type="button" id="AccountInfo" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false" id="accountInfoBtn"></button>
                         <div class="dropdown-menu" aria-labelledby="AccountInfo">
-                                <a class="dropdown-item" href="#"><span class="dot online"></span> Online</a>
-                                <a class="dropdown-item" href="#"><span class="dot away"></span> Away</a>
-                                <a class="dropdown-item" href="#"><span class="dot busy"></span> Busy</a>
-                                <a class="dropdown-item" href="#"><span class="dot offline"></span> Offline</a>
+                                <a class="dropdown-item" href="#">
+                                        <span class="dot online"></span> Online</a>
+                                <a class="dropdown-item" href="#">
+                                        <span class="dot away"></span> Away</a>
+                                <a class="dropdown-item" href="#">
+                                        <span class="dot busy"></span> Busy</a>
+                                <a class="dropdown-item" href="#">
+                                        <span class="dot offline"></span> Offline</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#">View Profile</a>
                                 <div class="dropdown-divider"></div>
@@ -112,7 +117,7 @@
 
         <script>
                 function openInstancesMenu() {
-                        
+
                         const { dialog } = require('electron').remote;
 
                         //TODO: If there are no instances in the folder, don't bother checking. The user will have to create a new instance.
@@ -137,18 +142,18 @@
                                 width: 1000,
                                 resizable: false,
                         });
-                        
+
                         instances.setMenu(null);
 
                         // Load html into window
                         instances.loadURL(url.format({
                                 pathname: path.join(__dirname, 'instances.html'),
-                                protocol:'file:',
+                                protocol: 'file:',
                                 slashes: true
                         }));
 
                         //Garbage collection.
-                        instances.on('closed', function() {
+                        instances.on('closed', function () {
                                 instances = null;
                         });
                 }

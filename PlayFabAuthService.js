@@ -29,7 +29,7 @@ function Load() {
 
 function SignOut() {
         process.env.isLoggedIn = false;
-        
+
         $('#signInBtn').show();
         $('#AccountInfo').hide();
 }
