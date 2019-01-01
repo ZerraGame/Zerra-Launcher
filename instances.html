@@ -192,9 +192,9 @@
 									fs.copyFile(newInstance_pathimg, zpath + newInstance_name + "/icon" + path.extname(newInstance_pathimg), function (err) { //Save a logo
 										if (!err) { //Only continue when there wasn't any error
 											//Create folders for each instance
-											fs.mkdir(zpath + newInstance_name + "/saves", { recursive: true }, function(){ if(err){console.log(err)} });
-											fs.mkdir(zpath + newInstance_name + "/mods", { recursive: true }, function(){ if(err){console.log(err)} });
-											fs.mkdir(zpath + newInstance_name + "/servers", { recursive: true }, function(){ if(err){console.log(err)} });
+											fs.mkdir(zpath + newInstance_name + "/Saves", { recursive: true }, function(){ if(err){console.log(err)} });
+											fs.mkdir(zpath + newInstance_name + "/Mods", { recursive: true }, function(){ if(err){console.log(err)} });
+											fs.mkdir(zpath + newInstance_name + "/Servers", { recursive: true }, function(){ if(err){console.log(err)} });
 
 											//Hack Arpaesis
 											var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/';
