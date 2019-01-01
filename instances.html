@@ -350,6 +350,27 @@
 
 		//!!End Of Instance Creation!!
 
+		//!!Instance Importing!!
+
+		function impInstanceSelect(){
+			const { dialog } = require('electron').remote;
+			const path = require('path');
+
+			dialog.showOpenDialog({
+				properties: ['openDirectory'],
+				defaultPath: 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Instances/'
+			}, function (files) {
+				icon: path.join(__dirname, 'assets/res/icon.png')
+				if (files !== undefined) {
+					frame: false
+
+					
+				}
+			});
+		}
+
+		//!!End Of Instance Importing!!
+
 		function openInstance(id) {
 		}
 
