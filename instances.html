@@ -198,36 +198,43 @@
 
 											var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/Zerra-' + newInstance_ver + '.jar';
 
-											if (newInstance_ver != 'latest') {
-												var req = request('http://216.53.217.165:8080/Game/Zerra-' + newInstance_ver + '.jar');
-											} else {
-												var req = request('http://216.53.217.165:8080/Game/latest');
-											}
-
-											req.pipe(fs.createWriteStream(tempPath));
-
-											var contentSize;
-											req.on('response', function(response) {
-												console.log(response.statusCode); // 200
-												console.log('CONTENT SIZE - ' + response.headers['content-length']); // 'image/png'
-												contentSize = response.headers['content-length'];
-											});
-
-											var progress = 0;
-											req.on('data', function (chunk) {
-												var segment = chunk.length;
-												progress += segment;
-												console.log('PROGRESS - ' + (progress / contentSize * 100) + '%');
-											});
-
-											fs.writeFile(zpath + newInstance_name + "/info.json", infoToJSON(), 'utf8', function(err){ //Save the JSON file holding information about this instance
-												if(err){
-													console.log(err);
+											if(!fs.existsSync(tempPath)) {
+												if (newInstance_ver != 'latest') {
+													var req = request('http://216.53.217.165:8080/Game/Zerra-' + newInstance_ver + '.jar');
+												} else {
+													var req = request('http://216.53.217.165:8080/Game/latest');
 												}
-											});
 
-											//Hide this window
-											$('#newInstanceModal').modal('hide');
+												req.pipe(fs.createWriteStream(tempPath));
+
+												var contentSize;
+												req.on('response', function(response) {
+													console.log(response.statusCode); // 200
+													console.log('CONTENT SIZE - ' + response.headers['content-length']); // 'image/png'
+													contentSize = response.headers['content-length'];
+												});
+
+												var progress = 0;
+												req.on('data', function (chunk) {
+													var segment = chunk.length;
+													progress += segment;
+													console.log('PROGRESS - ' + (progress / contentSize * 100) + '%');
+
+													if((progress / contentSize) == 1) {
+														//Hide this modal. We are done downloading.
+														$('#newInstanceModal').modal('hide');
+													}
+												});
+
+												fs.writeFile(zpath + newInstance_name + "/info.json", infoToJSON(), 'utf8', function(err){ //Save the JSON file holding information about this instance
+													if(err){
+														console.log(err);
+													}
+												});
+											}else {
+												// Close the modal immediately, the file was already downloaded before.
+												$('#newInstanceModal').modal('hide');
+											}
 										} else {
 											console.log(err);
 											$("#alertText").text("Couldn't save an instance image!");
