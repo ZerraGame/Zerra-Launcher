@@ -116,7 +116,7 @@
 			if(newInstance_name && newInstance_name != ""){ //Check if user filled out the name
 				if(newInstance_name.length <= 12){
 					if(newInstance_img){ //Check if user picked an image
-						if(!isNaN(newInstance_ver)){ //Check if user picked a version
+						if(newInstance_ver != null){ //Check if user picked a version
 							if(!fs.existsSync(zpath+newInstance_name+"/")){ //Basically check if there is an instance with the same name
 								//Instance Div
 								var instance = document.createElement('div');
@@ -222,8 +222,7 @@
 
 			$("#dropdownMenuButton").text(element.id);
 
-			//TODO: This variable to the left can't be a number... has to be a string.
-			//newInstance_ver = ver;
+			newInstance_ver = element.id;
 		}
 
 		function infoToJSON(){
