@@ -7,14 +7,14 @@
 	<link rel="stylesheet" type="text/css" href="css/instances.css">
 </head>
 
-<body>
+<body onload="loadInstances()">
 	<div id="wrapper">
 		<div id="tools">
 			<button type="button" data-toggle="modal" data-target="#newInstanceModal" id="new" class="btn btn-success">New Instance</button>
 			<button type="button" onclick="impInstance()" id="imp" class="btn btn-success">Import Instance</button>
 			<button type="button" onclick="closeWindow()" id="close" class="btn btn-danger">Close</button>
 		</div>
-		<div id="instances">
+		<div id="instances"> <!--Load all instances when this div has loaded-->
 			<!--Store instances-->
 		</div>
 		<div class="modal fade" id="newInstanceModal" tabindex="-1" role="dialog" aria-labelledby="newInstanceModalLabel" aria-hidden="true">
@@ -35,10 +35,10 @@
 						<div class="form-group">
 							<label for="exampleInputPassword1">Instance Image</label>
 							<br>
-							<button type="button" class="btn btn-primary" onclick="newInstanceImg(0)" id="img-choose">Select Icon</button>
+							<button type="button" class="btn btn-primary" onclick="newInstanceImg()" id="img-choose">Select Icon</button>
 							<br>
 							<br>
-							<img id="previewImg" width="64" height="64"></img>
+							<img id="previewImg" width="64" height="64" src="assets/res/icon.png"></img>
 						</div>
 						<div class="form-group">
 							<label for="exampleInputPassword1">Instance Version</label>
@@ -108,19 +108,15 @@
 			},
 		});
 
-		//!!Instance Creation!!
-		//Hold data of instance before creating one.
-		var newInstance_name;
-		var newInstance_img;
-		var newInstance_ver;
+		//!!Instance Loading!!
+		function loadInstances(){
+			fs.readdir(zpath, function(err, dirs){
+				dirs.forEach(function(dir){
+					fs.stat(zpath+"/"+dir, function(err, stats){ //Check for each instance
+						if(stats.isDirectory()){ //Check if it's actually an instance/directory
+							fs.readFile(zpath+"/"+dir+"/info.json", function(err, jdata){ //Load aaaaaalll data about the instance (json data)
+								var data = JSON.parse(jdata); //UnJSONify
 
-		function createInstance() {
-			newInstance_name = $("#nameInput").val();
-			if (newInstance_name && newInstance_name != "") { //Check if user filled out the name
-				if (newInstance_name.length <= 32) {
-					if (newInstance_img) { //Check if user picked an image
-						if (newInstance_ver != null) { //Check if user picked a version
-							if (!fs.existsSync(zpath + newInstance_name + "/")) { //Basically check if there is an instance with the same name
 								//Instance Div
 								var instance = document.createElement('div');
 								instance.className = 'instance';
@@ -130,52 +126,106 @@
 								//Instance's Image
 								var img = document.createElement('img');
 								img.className = 'instance-img';
-								img.src = newInstance_img.src;
+								img.src = zpath+"/"+dir+"/"+data.icon;
+
+								console.log(data.icon);
 
 								instance.appendChild(img);
 
 								//Instance's Name
 								var name = document.createElement('h1');
 								name.className = 'instance-name';
-								name.innerText = newInstance_name;
+								name.innerText = data.name;
 
 								instance.appendChild(name);
 
 								instances_holder.appendChild(instance);
 
 								shuffle.add([instance]);
+							});
+						}
+					})
+				});
+			});
+		}
+		//!!End Of Instance Loading!!
 
-								fs.mkdir(zpath + newInstance_name + "/", { recursive: true }, function (err) {
-									if (!err) {
-										fs.copyFile(newInstance_img.src, zpath + newInstance_name + "/logo" + path.extname(newInstance_img.src), function (err) { //Save a logo
-											if (!err) {
-												return console.log('TRUE');
+		//!!Instance Creation!!
+		//Hold data of instance before creating one.
+		var newInstance_name;
+		var newInstance_pathimg = "assets/res/icon.png"; //Image's path, set a Zerra image path as default
+		var newInstance_ver;
+
+		function createInstance() {
+			newInstance_name = $("#nameInput").val();
+			if (newInstance_name && newInstance_name != "") { //Check if user filled out the name
+				if (newInstance_name.length <= 32) {
+					//No need to check the image, because it'll be a default one if not picked.
+					if (newInstance_ver != null) { //Check if user picked a version
+						if (!fs.existsSync(zpath + newInstance_name + "/")) { //Basically check if there is an instance with the same name
+							//Instance Div
+							var instance = document.createElement('div');
+							instance.className = 'instance';
+							instance.setAttribute("id", instances_holder.childElementCount);
+							instance.addEventListener("onclick", openInstance(instance.getAttribute("id")));
+
+							//Instance's Image
+							var img = document.createElement('img');
+							img.className = 'instance-img';
+							img.src = newInstance_pathimg;
+
+							instance.appendChild(img);
+
+							//Instance's Name
+							var name = document.createElement('h1');
+							name.className = 'instance-name';
+							name.innerText = newInstance_name;
+
+							instance.appendChild(name);
+
+							instances_holder.appendChild(instance);
+
+							shuffle.add([instance]);
+
+							fs.mkdir(zpath + newInstance_name + "/", { recursive: true }, function (err) {
+								if (!err) {
+									fs.copyFile(newInstance_pathimg, zpath + newInstance_name + "/icon" + path.extname(newInstance_pathimg), function (err) { //Save a logo
+										if (!err) { //Only continue when there wasn't any error
+											//Create folders for each instance
+											fs.mkdir(zpath + newInstance_name + "/saves", { recursive: true }, function(){ if(err){console.log(err)} });
+											fs.mkdir(zpath + newInstance_name + "/mods", { recursive: true }, function(){ if(err){console.log(err)} });
+											fs.mkdir(zpath + newInstance_name + "/servers", { recursive: true }, function(){ if(err){console.log(err)} });
+
+											//Hack Arpaesis
+											var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/';
+											if (newInstance_ver != 'latest') {
+												request('http://216.53.217.165:8080/Game/Zerra-' + newInstance_ver + '.jar').pipe(fs.createWriteStream(tempPath + 'Zerra-' + newInstance_ver + '.jar'));
 											} else {
-												console.log(err);
-												console.log(newInstance_img.src);
-												//$("#alertText").text("There was an error while saving.");
+												request('http://216.53.217.165:8080/Game/latest').pipe(fs.createWriteStream(tempPath + 'Zerra-' + newInstance_ver + '.jar'));
 											}
-										});
-										$('#newInstanceModal').modal('hide');
 
-										var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/';
-										if (newInstance_ver != 'latest') {
-											request('http://216.53.217.165:8080/Game/Zerra-' + newInstance_ver + '.jar').pipe(fs.createWriteStream(tempPath + 'Zerra-' + newInstance_ver + '.jar'));
+											fs.writeFile(zpath + newInstance_name + "/info.json", infoToJSON(), 'utf8', function(err){ //Save the JSON file holding information about this instance
+												if(err){
+													console.log(err);
+												}
+											});
+
+											//Hide this window
+											$('#newInstanceModal').modal('hide');
 										} else {
-											request('http://216.53.217.165:8080/Game/latest').pipe(fs.createWriteStream(tempPath + 'Zerra-' + newInstance_ver + '.jar'));
+											console.log(err);
+											$("#alertText").text("Couldn't save an instance image!");
 										}
-									} else {
-										$("#alertText").text("There was an error while saving!");
-									}
-								});
-							} else {
-								$("#alertText").text("An instance with that name already exists!");
-							}
+									});
+								} else {
+									$("#alertText").text("Couldn't create an instance directory!");
+								}
+							});
 						} else {
-							$("#alertText").text("No version selected!");
+							$("#alertText").text("An instance with that name already exists!");
 						}
 					} else {
-						$("#alertText").text("No icon selected!");
+						$("#alertText").text("No version selected!");
 					}
 				} else {
 					$("#alertText").text("The instance name can be no greater than 32 characters!");
@@ -185,46 +235,44 @@
 			}
 		}
 
-		function newInstanceImg(method) {
+		function newInstanceImg() {
 			const { dialog } = require('electron').remote;
 			const path = require('path');
 
-			if (method == 0) { //Choose from Drive
-				dialog.showOpenDialog({
-					properties: ['openFile'],
-					filters: [
-						{
-							"name": "Images",
-							"extensions": ["png", "jpg", "jpeg", "bmp"]
-						}
-					],
-					defaultPath: 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Instances/'
-				}, function (files) {
-					icon: path.join(__dirname, 'assets/res/icon.png')
-					if (files !== undefined) {
-						frame: false
+			dialog.showOpenDialog({
+				properties: ['openFile'],
+				filters: [
+					{
+						"name": "Images",
+						"extensions": ["png", "jpg", "jpeg", "bmp"]
+					}
+				],
+				defaultPath: 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Instances/'
+			}, function (files) {
+				icon: path.join(__dirname, 'assets/res/icon.png')
+				if (files !== undefined) {
+					frame: false
 
-						var img = new Image();
-						img.src = files[0] + '?' + new Date().getTime();
-						if (img.width == img.height) {
-							if (Math.sqrt(img.width) % 1 == 0 && Math.sqrt(img.height) % 1 == 0) {
-								newInstance_img = new Image();
-								if (!newInstance_img.src) { //Stupid refresh
-									newInstance_img.src = files[0];
+					var img = new Image();
+					img.src = files[0] + '?' + new Date().getTime();
+					img.addEventListener("load", function() { //Only continue if the image has fully loaded
+						if (img.width && img.height) { //Check if the image... well is something.
+							if (img.width == img.height) {
+								if (Math.sqrt(img.width) % 1 == 0 && Math.sqrt(img.height) % 1 == 0) {
+									$("#previewImg").attr("src", files[0] + '?' + new Date().getTime());
+									newInstance_pathimg = files[0];
 								} else {
-									newInstance_img = new Image();
-									newInstance_img.src = files[0];
+									$("#alertText").text("Selected image's size isn't a power of 2.");
 								}
-								document.getElementById('previewImg').src = files[0] + '?' + new Date().getTime();
 							} else {
-								$("#alertText").text("Selected image's size isn't a power of 2.");
+								$("#alertText").text("Selected image isn't a square.");
 							}
 						} else {
-							$("#alertText").text("Selected image isn't a square.");
+							$("#alertText").text("Selected image couldn't be loaded.");
 						}
-					}
-				});
-			}
+					});
+				}
+			});
 		}
 
 		function newInstanceVersion(element) {
@@ -239,9 +287,10 @@
 		function infoToJSON() {
 			var pinfo = { //Pure non JSON info
 				name: newInstance_name,
-				version: newInstance_ver
+				version: newInstance_ver,
+				icon: "icon"+path.extname(newInstance_pathimg) //Make it relative to the launcher to make it "portable"
 			};
-			var info = JSON.parse(pinfo); //JSONifny
+			var info = JSON.stringify(pinfo); //JSONifny
 			return info;
 		}
 
