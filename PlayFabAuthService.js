@@ -2,6 +2,14 @@ $(document).ready(function () {
         Load();
 });
 
+const cookies = require('./cookies.js');
+const settings = require('./settings.js');
+
+let remote = require('electron').remote;
+let session = remote.session;
+
+var sendFeedBack = true;
+
 function Load() {
         'use strict';
 
@@ -12,6 +20,18 @@ function Load() {
         let jsonContents = JSON.parse(fileContents);
 
         PlayFab.settings.titleId = jsonContents.database_key;
+
+        // Check if the account should be signed back in
+        if (settings.getSettings().RememberEmail && settings.getSettings().KeepLoggedIn && cookies.getCookie('Session_EMAIL') !== null && cookies.getCookie('Session_PASSWORD') !== null) {
+                session.defaultSession.cookies.get({}, (error, cookies) => {
+                        for (var i = 0; i < cookies.length; i++) {
+                                if (cookies[i].name === "Session_EMAIL") {
+                                        TryLogin(cookies[i].value, cookies[i + 1].value);
+                                        sendFeedBack = false;
+                                }
+                        }
+                });
+        }
 
         // Check for button clicks;
         $("#login").click(function () {
@@ -29,13 +49,17 @@ function Load() {
 
 // Sign the user out of the launcher
 function SignOut() {
-        process.env.isLoggedIn = false;
+        cookies.setCookie("Session_EMAIL", null);
+        cookies.setCookie("Session_PASSWORD", null);
 
         $('#signInBtn').show();
         $('#AccountInfo').hide();
 }
 
 function TryLogin(Email, Password) {
+        console.log(Email, Password);
+        sendFeedBack = true;
+
         // Create a login request for PlayFab
         var loginRequest = {
 
@@ -49,10 +73,13 @@ function TryLogin(Email, Password) {
 }
 
 function TryRegister(Usernamme, Email, Password, RepeatPassword) {
+        sendFeedBack = true;
+
         // Check if the passwords match, if they don't then give a little alert
         if (Password !== RepeatPassword) {
                 document.getElementById("registerAlertText").innerHTML = "Passwords do not match!";
-                return
+
+                return;
         }
 
         // Create a register request for PlayFab
@@ -70,7 +97,8 @@ function TryRegister(Usernamme, Email, Password, RepeatPassword) {
 var LoginCallback = function (result, error) {
         if (result !== null) {
                 // What will happen after the login is successful? Go crazy!
-                document.getElementById("loginAlertText").innerHTML = "Successfully logged-in!";
+                if (sendFeedBack)
+                        document.getElementById("loginAlertText").innerHTML = "Successfully logged-in!";
 
                 // Close the login modal
                 $('#accountModal').modal('hide');
@@ -94,16 +122,23 @@ var LoginCallback = function (result, error) {
                                 // Do whatever you want to do with errors here.
                         }
                 });
+
+                if (settings.getSettings().RememberEmail) {
+                        cookies.setCookie("Session_EMAIL", GetElementValue("AccountEmail"));
+                        cookies.setCookie("Session_PASSWORD", GetElementValue("AccountPassword"));
+                }
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
-                document.getElementById("loginAlertText").innerHTML = "Oops! There was a problem!";
+                if (sendFeedBack)
+                        document.getElementById("loginAlertText").innerHTML = "Oops! There was a problem!";
         }
 }
 
 var RegisterCallBack = function (result, error) {
         if (result !== null) {
                 // What will happen after the register is successful? Go crazy!
-                document.getElementById("registerAlertText").innerHTML = "Successfully registered account!";
+                if (sendFeedBack)
+                        document.getElementById("registerAlertText").innerHTML = "Successfully registered account!";
 
                 // Close the register modal
                 $('#registerModal').modal('hide');
@@ -115,7 +150,8 @@ var RegisterCallBack = function (result, error) {
                 });
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
-                document.getElementById("registerAlertText").innerHTML = "Oops! There was a problem!";
+                if (sendFeedBack)
+                        document.getElementById("registerAlertText").innerHTML = "Oops! There was a problem!";
         }
 }
 
