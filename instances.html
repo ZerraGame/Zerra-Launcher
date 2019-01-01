@@ -158,12 +158,30 @@
 										});
 										$('#newInstanceModal').modal('hide');
 
-										var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/';
+										var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/Zerra-' + newInstance_ver + '.jar';
+
 										if (newInstance_ver != 'latest') {
-											request('http://216.53.217.165:8080/Game/Zerra-' + newInstance_ver + '.jar').pipe(fs.createWriteStream(tempPath + 'Zerra-' + newInstance_ver + '.jar'));
+											var req = request('http://216.53.217.165:8080/Game/Zerra-' + newInstance_ver + '.jar');
 										} else {
-											request('http://216.53.217.165:8080/Game/latest').pipe(fs.createWriteStream(tempPath + 'Zerra-' + newInstance_ver + '.jar'));
+											var req = request('http://216.53.217.165:8080/Game/latest');
 										}
+
+										req.pipe(fs.createWriteStream(tempPath));
+
+										var contentSize;
+										req.on('response', function(response) {
+											console.log(response.statusCode); // 200
+											console.log('CONTENT SIZE - ' + response.headers['content-length']); // 'image/png'
+											contentSize = response.headers['content-length'];
+										});
+
+										var progress = 0;
+										req.on('data', function (chunk) {
+											var segment = chunk.length;
+											progress += segment;
+											console.log('PROGRESS - ' + (progress / contentSize * 100) + '%');
+										});
+										
 									} else {
 										$("#alertText").text("There was an error while saving!");
 									}
