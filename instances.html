@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <title>Instances</title>
-    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="css/instances.css">
+	<title>Instances</title>
+	<link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="css/instances.css">
 </head>
+
 <body>
-    <div id="wrapper">
+	<div id="wrapper">
 		<div id="tools">
 			<button type="button" data-toggle="modal" data-target="#newInstanceModal" id="new" class="btn btn-success">New Instance</button>
 			<button type="button" onclick="impInstance()" id="imp" class="btn btn-success">Import Instance</button>
@@ -17,76 +19,77 @@
 		</div>
 		<div class="modal fade" id="newInstanceModal" tabindex="-1" role="dialog" aria-labelledby="newInstanceModalLabel" aria-hidden="true">
 			<div class="modal-dialog" role="document">
-					<div class="modal-content">
-							<div class="modal-header">
-									<h5 class="modal-title" id="newInstanceModalLabel">New Instance</h5>
-									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
-											<span aria-hidden="true">&times;</span>
-									</button>
-							</div>
-							<div class="modal-body">
-									<div class="form-group">
-											<label for="nameInput">Instance Name</label>
-											<input type="text" class="form-control" id="nameInput" aria-describedby="nameHelp" placeholder="Instance Name" required>
-											<div class="form-control-feedback"></div>
-									</div>
-									<div class="form-group">
-											<label for="exampleInputPassword1">Instance Image</label>
-											<br>
-											<button type="button" class="btn btn-primary" onclick="newInstanceImg(0)" id="img-choose">Select Icon</button>
-											<br>
-											<br>
-											<img id="previewImg" width="64" height="64"></img>
-									</div>
-									<div class="form-group">
-											<label for="exampleInputPassword1">Instance Version</label>
-											<br>
-											<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-												Version
-											</button>
-											<div id="VersionList" class="dropdown-menu" aria-labelledby="VersionList">
-												<script>
-													//Populate this list with versions
-													const request = require('request');
-													const fs = require('fs');
-
-													request('http://216.53.217.165:8080/FetchGameVersions', { json: true }, (err, res, body) => {
-
-														if(err) {
-															return console.log(err);
-														}
-
-														var versionList = body.toString().split(',');
-
-														var i;
-														for (i = 0; i < versionList.length; i++) {
-															var temp = versionList[i].replace('.jar', '').replace('-', ' ');
-															var version = temp.replace('Zerra ', '');
-															document.getElementById("VersionList").innerHTML += '<a class="dropdown-item" id="' + version + '" href="#" onclick="newInstanceVersion(this)">' + temp + '</a>';
-														}
-													});
-
-												</script>
-												<a class="dropdown-item" id="Latest" href="#" onclick="newInstanceVersion(Latest (Auto-Update))">Latest (Auto-Update)</a>
-											</div>
-									</div>
-							</div>
-							<div class="modal-footer">
-									<p id="alertText"></p>
-									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-									<button type="button" class="btn btn-success" onclick="createInstance()" id="createInstance">Create</button>
-							</div>
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="newInstanceModalLabel">New Instance</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
 					</div>
+					<div class="modal-body">
+						<div class="form-group">
+							<label for="nameInput">Instance Name</label>
+							<input type="text" class="form-control" id="nameInput" aria-describedby="nameHelp" placeholder="Instance Name" required>
+							<div class="form-control-feedback"></div>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputPassword1">Instance Image</label>
+							<br>
+							<button type="button" class="btn btn-primary" onclick="newInstanceImg(0)" id="img-choose">Select Icon</button>
+							<br>
+							<br>
+							<img id="previewImg" width="64" height="64"></img>
+						</div>
+						<div class="form-group">
+							<label for="exampleInputPassword1">Instance Version</label>
+							<br>
+							<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+							 aria-expanded="false">
+								Version
+							</button>
+							<div id="VersionList" class="dropdown-menu" aria-labelledby="VersionList">
+								<script>
+									//Populate this list with versions
+									const request = require('request');
+									const fs = require('fs');
+
+									request('http://216.53.217.165:8080/FetchGameVersions', { json: true }, (err, res, body) => {
+
+										if (err) {
+											return console.log(err);
+										}
+
+										var versionList = body.toString().split(',');
+
+										var i;
+										for (i = 0; i < versionList.length; i++) {
+											var temp = versionList[i].replace('.jar', '').replace('-', ' ');
+											var version = temp.replace('Zerra ', '');
+											document.getElementById("VersionList").innerHTML += '<a class="dropdown-item" id="' + version + '" href="#" onclick="newInstanceVersion(this)">' + temp + '</a>';
+										}
+									});
+
+								</script>
+								<a class="dropdown-item" id="latest" href="#" onclick="newInstanceVersion(this)">Latest</a>
+							</div>
+						</div>
+					</div>
+					<div class="modal-footer">
+						<p id="alertText"></p>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-success" onclick="createInstance()" id="createInstance">Create</button>
+					</div>
+				</div>
 			</div>
-        </div>
-    </div>
-    
-    <script>
-        window.jQuery = window.$ = require('jquery');
+		</div>
+	</div>
+
+	<script>
+		window.jQuery = window.$ = require('jquery');
 
 		const path = require('path');
 
-        var zpath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Instances/';
+		var zpath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Instances/';
 
 		var instances_holder = document.getElementById('instances');
 
@@ -97,11 +100,11 @@
 			speed: 250,
 			easing: 'ease',
 			columnWidth: function (containerWidth) {
-			return 128;
+				return 128;
 			},
 
 			gutterWidth: function (containerWidth) {
-			return 10;
+				return 10;
 			},
 		});
 
@@ -111,13 +114,13 @@
 		var newInstance_img;
 		var newInstance_ver;
 
-		function createInstance(){
+		function createInstance() {
 			newInstance_name = $("#nameInput").val();
-			if(newInstance_name && newInstance_name != ""){ //Check if user filled out the name
-				if(newInstance_name.length <= 32){
-					if(newInstance_img){ //Check if user picked an image
-						if(newInstance_ver != null){ //Check if user picked a version
-							if(!fs.existsSync(zpath+newInstance_name+"/")){ //Basically check if there is an instance with the same name
+			if (newInstance_name && newInstance_name != "") { //Check if user filled out the name
+				if (newInstance_name.length <= 32) {
+					if (newInstance_img) { //Check if user picked an image
+						if (newInstance_ver != null) { //Check if user picked a version
+							if (!fs.existsSync(zpath + newInstance_name + "/")) { //Basically check if there is an instance with the same name
 								//Instance Div
 								var instance = document.createElement('div');
 								instance.className = 'instance';
@@ -142,74 +145,81 @@
 
 								shuffle.add([instance]);
 
-								fs.mkdir(zpath+newInstance_name+"/", { recursive: true }, function(err){
-									if(!err){
-										fs.copyFile(newInstance_img.src, zpath+newInstance_name+"/logo"+path.extname(newInstance_img.src), function(err){ //Save a logo
-											if(!err){
+								fs.mkdir(zpath + newInstance_name + "/", { recursive: true }, function (err) {
+									if (!err) {
+										fs.copyFile(newInstance_img.src, zpath + newInstance_name + "/logo" + path.extname(newInstance_img.src), function (err) { //Save a logo
+											if (!err) {
 												return console.log('TRUE');
-											}else{
+											} else {
 												console.log(err);
 												console.log(newInstance_img.src);
 												//$("#alertText").text("There was an error while saving.");
 											}
 										});
 										$('#newInstanceModal').modal('hide');
-									}else{
+
+										var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/';
+										if (newInstance_ver != 'latest') {
+											request('http://216.53.217.165:8080/Game/Zerra-' + newInstance_ver + '.jar').pipe(fs.createWriteStream(tempPath + 'Zerra-' + newInstance_ver + '.jar'));
+										} else {
+											request('http://216.53.217.165:8080/Game/latest').pipe(fs.createWriteStream(tempPath + 'Zerra-' + newInstance_ver + '.jar'));
+										}
+									} else {
 										$("#alertText").text("There was an error while saving!");
 									}
 								});
-							}else{
+							} else {
 								$("#alertText").text("An instance with that name already exists!");
 							}
-						}else{
+						} else {
 							$("#alertText").text("No version selected!");
 						}
-					}else{
+					} else {
 						$("#alertText").text("No icon selected!");
 					}
-				}else{
+				} else {
 					$("#alertText").text("The instance name can be no greater than 32 characters!");
 				}
-			}else{
+			} else {
 				$("#alertText").text("The name of the instance is not valid!");
 			}
 		}
 
-		function newInstanceImg(method){
+		function newInstanceImg(method) {
 			const { dialog } = require('electron').remote;
 			const path = require('path');
 
-			if(method == 0){ //Choose from Drive
+			if (method == 0) { //Choose from Drive
 				dialog.showOpenDialog({
 					properties: ['openFile'],
 					filters: [
-                        {
-                            "name": "Images",
-                            "extensions": ["png", "jpg", "jpeg", "bmp"]
-                        }
+						{
+							"name": "Images",
+							"extensions": ["png", "jpg", "jpeg", "bmp"]
+						}
 					],
 					defaultPath: 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Instances/'
-				}, function(files){
+				}, function (files) {
 					icon: path.join(__dirname, 'assets/res/icon.png')
-					if(files !== undefined){
+					if (files !== undefined) {
 						frame: false
 
 						var img = new Image();
-						img.src = files[0]+'?'+new Date().getTime();
-						if(img.width == img.height){
-							if(Math.sqrt(img.width) % 1 == 0 && Math.sqrt(img.height) % 1 == 0){
+						img.src = files[0] + '?' + new Date().getTime();
+						if (img.width == img.height) {
+							if (Math.sqrt(img.width) % 1 == 0 && Math.sqrt(img.height) % 1 == 0) {
 								newInstance_img = new Image();
-								if(!newInstance_img.src){ //Stupid refresh
+								if (!newInstance_img.src) { //Stupid refresh
 									newInstance_img.src = files[0];
-								}else{
+								} else {
 									newInstance_img = new Image();
 									newInstance_img.src = files[0];
 								}
-								document.getElementById('previewImg').src = files[0]+'?'+new Date().getTime();
-							}else{
+								document.getElementById('previewImg').src = files[0] + '?' + new Date().getTime();
+							} else {
 								$("#alertText").text("Selected image's size isn't a power of 2.");
 							}
-						}else{
+						} else {
 							$("#alertText").text("Selected image isn't a square.");
 						}
 					}
@@ -217,7 +227,7 @@
 			}
 		}
 
-		function newInstanceVersion(element){
+		function newInstanceVersion(element) {
 			const { dialog } = require('electron').remote;
 			const path = require('path');
 
@@ -226,7 +236,7 @@
 			newInstance_ver = element.id;
 		}
 
-		function infoToJSON(){
+		function infoToJSON() {
 			var pinfo = { //Pure non JSON info
 				name: newInstance_name,
 				version: newInstance_ver
@@ -237,17 +247,18 @@
 
 		//!!End Of Instance Creation!!
 
-		function openInstance(id){
+		function openInstance(id) {
 		}
 
-        //Just close...
-        function closeWindow(){
-            const remote = require('electron').remote;
-            var window = remote.getCurrentWindow();
-            window.close(); 
-        }
-    </script>
-    <script src="node_modules/popper.js/dist/umd/popper.js"></script>
-    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+		//Just close...
+		function closeWindow() {
+			const remote = require('electron').remote;
+			var window = remote.getCurrentWindow();
+			window.close();
+		}
+	</script>
+	<script src="node_modules/popper.js/dist/umd/popper.js"></script>
+	<script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
 </body>
+
 </html>
