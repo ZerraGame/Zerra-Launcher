@@ -120,17 +120,6 @@
 
                         const { dialog } = require('electron').remote;
 
-                        //TODO: If there are no instances in the folder, don't bother checking. The user will have to create a new instance.
-                        /*dialog.showOpenDialog({
-                                properties: ['openDirectory'],
-                                defaultPath: 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/instances/'
-                        }, function (files) {
-                                icon: path.join(__dirname, 'assets/res/icon.png')
-                                if (files !== undefined) {
-                                frame: false,
-                                        //TODO: Handle this.
-                                }
-                        });*/
                         const electron = require('electron');
                         const url = require('url');
                         const path = require('path');
@@ -142,6 +131,7 @@
                                 width: 1000,
                                 resizable: false,
                         });
+                        instances.openDevTools(); //Why u bullying me
 
                         instances.setMenu(null);
 

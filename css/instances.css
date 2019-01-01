@@ -37,7 +37,6 @@
     margin-left: 10px;
     margin-top: 20px;
     float: left;
-    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(200, 200, 200));
     transition: all .4s ease-in-out;
 }
 
@@ -62,7 +61,7 @@
     font-size: 12.5px;
     white-space: nowrap;
     position: absolute;
-    color: rgba(255, 255, 255, 1.0);
+    color: rgb(0, 0, 0);
     transition: all .4s ease-in-out;
     transform: translate(-50%, 0);
 }
