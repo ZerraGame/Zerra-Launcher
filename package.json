@@ -17,7 +17,8 @@
     "electron-is-dev": "^1.0.1",
     "jquery": "^3.3.1",
     "mkdirp": "^0.5.1",
-    "popper.js": "^1.14.6"
+    "popper.js": "^1.14.6",
+    "shufflejs": "^5.2.1"
   },
   "devDependencies": {
     "electron-packager": "^13.0.1",

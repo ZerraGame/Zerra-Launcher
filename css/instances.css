@@ -1,0 +1,68 @@
+#wrapper {
+    margin-top: 25px;
+}
+
+/*Tools Div*/
+#tools {
+    width:100%;
+}
+
+/*Tools*/
+#new {
+    margin-left: 25px;
+    float: left;
+}
+
+#imp {
+    margin-left: 25px;
+    float: left;
+}
+
+#close {
+    margin-left: 25px;
+    float: left;
+}
+
+/*Instances Holder*/
+#instances{
+    width: 100%;
+    padding-top:10%;
+}
+
+/*Instance Element*/
+.instance{
+    position: relative;
+    width: 128px;
+    height: 128px;
+    margin-left: 10px;
+    margin-top: 20px;
+    float: left;
+    background: linear-gradient(to bottom, rgb(240, 240, 240), rgb(200, 200, 200));
+    transition: all .4s ease-in-out;
+}
+
+.instance:hover{
+    cursor: pointer;
+}
+
+/*Instance Image*/
+.instance-img{
+    width: 128px;
+    height: 128px;
+    margin-right:0;
+    margin-bottom:0;
+    transform: scale(0.6, 0.6);
+}
+
+/*Instance's Name*/
+.instance-name{
+    left:50%;
+    bottom:-2%;
+    text-align: center;
+    font-size: 12.5px;
+    white-space: nowrap;
+    position: absolute;
+    color: rgba(255, 255, 255, 1.0);
+    transition: all .4s ease-in-out;
+    transform: translate(-50%, 0);
+}

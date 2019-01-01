@@ -100,7 +100,7 @@
         <div class="play">
                 <div class="btn-group">
                         <button type="button" class="btn playbtn btn-success disabled" id="play">Play</button>
-                        <button type="button" onclick="getInstance()" class="btn instancebtn btn-success dropdown-toggle dropdown-toggle-split"></button>
+                        <button type="button" onclick="openInstancesMenu()" class="btn instancebtn btn-success dropdown-toggle dropdown-toggle-split"></button>
                 </div>
         </div>
         <div class="instanceView">
@@ -111,17 +111,47 @@
 
 
         <script>
-                function getInstance() {
-
+                function openInstancesMenu() {
+                        
                         const { dialog } = require('electron').remote;
 
                         //TODO: If there are no instances in the folder, don't bother checking. The user will have to create a new instance.
-                        dialog.showOpenDialog({
+                        /*dialog.showOpenDialog({
                                 properties: ['openDirectory'],
                                 defaultPath: 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/instances/'
                         }, function (files) {
-                                document.getElementById("instance").value = files;
-                                document.getElementById("play").classList.remove("disabled");
+                                icon: path.join(__dirname, 'assets/res/icon.png')
+                                if (files !== undefined) {
+                                frame: false,
+                                        //TODO: Handle this.
+                                }
+                        });*/
+                        const electron = require('electron');
+                        const url = require('url');
+                        const path = require('path');
+
+                        const BrowserWindow = electron.remote.BrowserWindow;
+                        let instances = new BrowserWindow({
+
+                                height: 600,
+                                width: 1000,
+                                resizable: false,
+                        });
+                        //TODO:
+                        instances.openDevTools();
+                        instances.setMenu(null);
+                        instances.setAlwaysOnTop(true); 
+
+                        // Load html into window
+                        instances.loadURL(url.format({
+                                pathname: path.join(__dirname, 'instances.html'),
+                                protocol:'file:',
+                                slashes: true
+                        }));
+
+                        //Garbage collection.
+                        instances.on('closed', function() {
+                                instances = null;
                         });
                 }
 

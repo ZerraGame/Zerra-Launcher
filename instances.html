@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Instances</title>
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/instances.css">
+</head>
+<body>
+    <div id="wrapper">
+		<div id="tools">
+			<button type="button" data-toggle="modal" data-target="#newInstanceModal" id="new" class="btn btn-success">New Instance</button>
+			<button type="button" onclick="impInstance()" id="imp" class="btn btn-success">Import Instance</button>
+			<button type="button" onclick="closeWindow()" id="close" class="btn btn-danger">Close</button>
+		</div>
+		<div id="instances">
+			<!--Store instances-->
+		</div>
+		<div class="modal fade" id="newInstanceModal" tabindex="-1" role="dialog" aria-labelledby="newInstanceModalLabel" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+					<div class="modal-content">
+							<div class="modal-header">
+									<h5 class="modal-title" id="newInstanceModalLabel">New Instance</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+									</button>
+							</div>
+							<div class="modal-body">
+									<div class="form-group">
+											<label for="nameInput">Instance Name</label>
+											<input type="email" class="form-control" id="nameInput" aria-describedby="nameHelp" placeholder="Enter name" required>
+											<div class="form-control-feedback"></div>
+									</div>
+									<div class="form-group">
+											<label for="exampleInputPassword1">Instance Image</label>
+											<br>
+											<button type="button" class="btn btn-primary" onclick="newInstanceImg(0)" id="img-choose">Search...</button>
+											<br>
+											<br>
+											<img id="previewImg" width="64" height="64"></img>
+									</div>
+									<div class="form-group">
+											<label for="exampleInputPassword1">Instance Version</label>
+											<br>
+											<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+												Version
+											</button>
+											<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+												<a class="dropdown-item" href="#" onclick="newInstanceVersion(0)">Latest (Auto-Update)</a>
+												<a class="dropdown-item" href="#" onclick="newInstanceVersion(1)">1.4</a>
+												<a class="dropdown-item" href="#" onclick="newInstanceVersion(2)">1.3</a>
+											</div>
+									</div>
+							</div>
+							<div class="modal-footer">
+									<p id="alertText"></p>
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+									<button type="button" class="btn btn-success" onclick="createInstance()" id="login">Create</button>
+							</div>
+					</div>
+			</div>
+        </div>
+    </div>
+    
+    <script>
+        window.jQuery = window.$ = require('jquery');
+
+        const fs = require('fs');
+
+		const path = require('path');
+
+        var zpath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Instances/';
+
+		var instances_holder = document.getElementById('instances');
+
+		var Shuffle = require('shufflejs');
+
+		var shuffle = new Shuffle(instances_holder, {
+			itemSelector: '.instance',
+			speed: 250,
+			easing: 'ease',
+			columnWidth: function (containerWidth) {
+			return 128;
+			},
+
+			gutterWidth: function (containerWidth) {
+			return 10;
+			},
+		});
+
+		//!!Instance Creation!!
+		//Hold data of instance before creating one.
+		var newInstance_name;
+		var newInstance_img;
+		var newInstance_ver;
+
+		function createInstance(){
+			newInstance_name = $("#nameInput").val();
+			if(newInstance_name && newInstance_name != ""){ //Check if user filled out the name
+				if(newInstance_name.length <= 12){
+					if(newInstance_img){ //Check if user picked an image
+						if(!isNaN(newInstance_ver)){ //Check if user picked a version
+							if(!fs.existsSync(zpath+newInstance_name+"/")){ //Basically check if there is an instance with the same name
+								//Instance Div
+								var instance = document.createElement('div');
+								instance.className = 'instance';
+								instance.setAttribute("id", instances_holder.childElementCount);
+								instance.addEventListener("onclick", openInstance(instance.getAttribute("id")));
+
+								//Instance's Image
+								var img = document.createElement('img');
+								img.className = 'instance-img';
+								img.src = newInstance_img.src;
+
+								instance.appendChild(img);
+
+								//Instance's Name
+								var name = document.createElement('h1');
+								name.className = 'instance-name';
+								name.innerText = newInstance_name;
+
+								instance.appendChild(name);
+
+								instances_holder.appendChild(instance);
+
+								shuffle.add([instance]);
+
+								fs.mkdir(zpath+newInstance_name+"/", { recursive: true }, function(err){
+									if(!err){
+										fs.copyFile(newInstance_img.src, zpath+newInstance_name+"/logo"+path.extname(newInstance_img.src), function(err){ //Save a logo
+											if(!err){
+												$('#newInstanceModal').modal('hide');
+											}else{
+												console.log(err);
+												console.log(newInstance_img.src);
+												//$("#alertText").text("There was an error while saving.");
+											}
+										});
+									}else{
+										$("#alertText").text("There was an error while saving.");
+									}
+								});
+							}else{
+								$("#alertText").text("An instance with same name already exists!");
+							}
+						}else{
+							$("#alertText").text("Pick a version!");
+						}
+					}else{
+						$("#alertText").text("Pick an image!");
+					}
+				}else{
+					$("#alertText").text("A name can have maximum of 12 characters!");
+				}
+			}else{
+				$("#alertText").text("Fill in a name!");
+			}
+		}
+
+		function newInstanceImg(method){
+			const { dialog } = require('electron').remote;
+			const path = require('path');
+
+			if(method == 0){ //Choose from Drive
+				dialog.showOpenDialog({
+					properties: ['openFile'],
+					filters: [
+                        {
+                            "name": "Images",
+                            "extensions": ["png", "jpg", "jpeg", "bmp"]
+                        }
+					],
+					defaultPath: 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Instances/'
+				}, function(files){
+					icon: path.join(__dirname, 'assets/res/icon.png')
+					if(files !== undefined){
+						frame: false
+
+						var img = new Image();
+						img.src = files[0]+'?'+new Date().getTime();
+						if(img.width == img.height){
+							if(Math.sqrt(img.width) % 1 == 0 && Math.sqrt(img.height) % 1 == 0){
+								newInstance_img = new Image();
+								if(!newInstance_img.src){ //Stupid refresh
+									newInstance_img.src = files[0];
+								}else{
+									newInstance_img = new Image();
+									newInstance_img.src = files[0];
+								}
+								document.getElementById('previewImg').src = files[0]+'?'+new Date().getTime();
+							}else{
+								$("#alertText").text("Selected image's size isn't power of 2.");
+							}
+						}else{
+							$("#alertText").text("Selected image isn't a square.");
+						}
+					}
+				});
+			}
+		}
+
+		function newInstanceVersion(ver){
+			const { dialog } = require('electron').remote;
+			const path = require('path');
+
+			if(ver == 0){
+				$("#dropdownMenuButton").text("Latest (Auto-Update)");
+			}else if(ver == 1){
+				$("#dropdownMenuButton").text("1.4");
+			}else if(ver == 2){
+				$("#dropdownMenuButton").text("1.3");
+			}
+			newInstance_ver = ver;
+		}
+
+
+		function infoToJSON(){
+			var pinfo = { //Pure non JSON info
+				name: newInstance_name,
+				version: newInstance_ver
+			};
+			var info = JSON.parse(pinfo); //JSONifny
+			return info;
+		}
+
+		//!!End Of Instance Creation!!
+
+		function openInstance(id){
+		}
+
+        //Just close...
+        function closeWindow(){
+            const remote = require('electron').remote;
+            var window = remote.getCurrentWindow();
+            window.close(); 
+        }
+    </script>
+    <script src="node_modules/popper.js/dist/umd/popper.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
+</body>
+</html>
