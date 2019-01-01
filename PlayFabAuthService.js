@@ -15,11 +15,11 @@ function Load() {
 
         // Check for button clicks;
         $("#login").click(function () {
-                TryLogin(document.getElementById("AccountEmail").value, document.getElementById("AccountPassword").value);
+                TryLogin(GetElementValue("AccountEmail"), GetElementValue("AccountPassword"));
         });
 
         $("#register").click(function () {
-                TryRegister();
+                TryRegister(GetElementValue("RegisterUsername"), GetElementValue("RegisterEmail"), GetElementValue("RegisterPassword"), GetElementValue("RegisterRepeatPassword"));
         });
 
         $("#signout").click(function () {
@@ -27,6 +27,7 @@ function Load() {
         });
 }
 
+// Sign the user out of the launcher
 function SignOut() {
         process.env.isLoggedIn = false;
 
@@ -47,18 +48,18 @@ function TryLogin(Email, Password) {
         PlayFabClientSDK.LoginWithEmailAddress(loginRequest, LoginCallback);
 }
 
-function TryRegister() {
+function TryRegister(Usernamme, Email, Password, RepeatPassword) {
         // Check if the passwords match, if they don't then give a little alert
-        if (document.getElementById("RegisterPassword").value !== document.getElementById("RegisterRepeatPassword").value) {
+        if (Password !== RepeatPassword) {
                 document.getElementById("registerAlertText").innerHTML = "Passwords do not match!";
                 return
         }
 
         // Create a register request for PlayFab
         var registerRequest = {
-                Username: document.getElementById("RegisterUsername").value,
-                Email: document.getElementById("RegisterEmail").value,
-                Password: document.getElementById("RegisterPassword").value,
+                Username: Usernamme,
+                Email: Email,
+                Password: Password,
                 TitleId: PlayFab.settings.titleId
         };
 
@@ -75,8 +76,10 @@ var LoginCallback = function (result, error) {
                 $('#accountModal').modal('hide');
                 $('#signInBtn').hide();
 
+                // Store account info in environment variables
                 process.env.isLoggedIn = true;
 
+                // Get the accounts profile info so we can set stuff like display name or avatar
                 PlayFabClientSDK.GetPlayerProfile({
                         PlayFabId: result.data.PlayFabId,
                         ProfileConstraints: {
@@ -114,4 +117,9 @@ var RegisterCallBack = function (result, error) {
                 // Do whatever you want to do with errors here.
                 document.getElementById("registerAlertText").innerHTML = "Oops! There was a problem!";
         }
+}
+
+// A function to get a elements value. Just here to keep code clean.
+function GetElementValue(name) {
+        return document.getElementById(name).value;
 }
