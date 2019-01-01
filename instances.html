@@ -27,13 +27,13 @@
 							<div class="modal-body">
 									<div class="form-group">
 											<label for="nameInput">Instance Name</label>
-											<input type="email" class="form-control" id="nameInput" aria-describedby="nameHelp" placeholder="Enter name" required>
+											<input type="text" class="form-control" id="nameInput" aria-describedby="nameHelp" placeholder="Instance Name" required>
 											<div class="form-control-feedback"></div>
 									</div>
 									<div class="form-group">
 											<label for="exampleInputPassword1">Instance Image</label>
 											<br>
-											<button type="button" class="btn btn-primary" onclick="newInstanceImg(0)" id="img-choose">Search...</button>
+											<button type="button" class="btn btn-primary" onclick="newInstanceImg(0)" id="img-choose">Select Icon</button>
 											<br>
 											<br>
 											<img id="previewImg" width="64" height="64"></img>
@@ -44,10 +44,30 @@
 											<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 												Version
 											</button>
-											<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-												<a class="dropdown-item" href="#" onclick="newInstanceVersion(0)">Latest (Auto-Update)</a>
-												<a class="dropdown-item" href="#" onclick="newInstanceVersion(1)">1.4</a>
-												<a class="dropdown-item" href="#" onclick="newInstanceVersion(2)">1.3</a>
+											<div id="VersionList" class="dropdown-menu" aria-labelledby="VersionList">
+												<script>
+													//Populate this list with versions
+													const request = require('request');
+													const fs = require('fs');
+
+													request('http://216.53.217.165:8080/FetchGameVersions', { json: true }, (err, res, body) => {
+
+														if(err) {
+															return console.log(err);
+														}
+
+														var versionList = body.toString().split(',');
+
+														var i;
+														for (i = 0; i < versionList.length; i++) {
+															var temp = versionList[i].replace('.jar', '').replace('-', ' ');
+															var version = temp.replace('Zerra ', '');
+															document.getElementById("VersionList").innerHTML += '<a class="dropdown-item" id="' + version + '" href="#" onclick="newInstanceVersion(this)">' + temp + '</a>';
+														}
+													});
+
+												</script>
+												<a class="dropdown-item" id="Latest" href="#" onclick="newInstanceVersion(Latest (Auto-Update))">Latest (Auto-Update)</a>
 											</div>
 									</div>
 							</div>
@@ -63,8 +83,6 @@
     
     <script>
         window.jQuery = window.$ = require('jquery');
-
-        const fs = require('fs');
 
 		const path = require('path');
 
@@ -198,20 +216,15 @@
 			}
 		}
 
-		function newInstanceVersion(ver){
+		function newInstanceVersion(element){
 			const { dialog } = require('electron').remote;
 			const path = require('path');
 
-			if(ver == 0){
-				$("#dropdownMenuButton").text("Latest (Auto-Update)");
-			}else if(ver == 1){
-				$("#dropdownMenuButton").text("1.4");
-			}else if(ver == 2){
-				$("#dropdownMenuButton").text("1.3");
-			}
-			newInstance_ver = ver;
-		}
+			$("#dropdownMenuButton").text(element.id);
 
+			//TODO: This variable to the left can't be a number... has to be a string.
+			//newInstance_ver = ver;
+		}
 
 		function infoToJSON(){
 			var pinfo = { //Pure non JSON info

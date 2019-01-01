@@ -15,6 +15,7 @@ var mkdirp = require('mkdirp');
 
 mkdirp(zerra_path + "/Instances/", {});
 mkdirp(zerra_path + "/Settings/", {});
+mkdirp(zerra_path + "/Shared/", {});
 
 // Listen for app to be ready
 app.on('ready', function () {
