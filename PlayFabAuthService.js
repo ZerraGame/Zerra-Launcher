@@ -15,7 +15,7 @@ function Load() {
 
         // Check for button clicks;
         $("#login").click(function () {
-                TryLogin();
+                TryLogin(document.getElementById("AccountEmail").value, document.getElementById("AccountPassword").value);
         });
 
         $("#register").click(function () {
@@ -28,15 +28,18 @@ function Load() {
 }
 
 function SignOut() {
-
+        process.env.isLoggedIn = false;
+        
+        $('#signInBtn').show();
+        $('#AccountInfo').hide();
 }
 
-function TryLogin() {
+function TryLogin(Email, Password) {
         // Create a login request for PlayFab
         var loginRequest = {
 
-                Email: document.getElementById("AccountEmail").value,
-                Password: document.getElementById("AccountPassword").value,
+                Email: Email,
+                Password: Password,
                 TitleId: PlayFab.settings.titleId
         };
 
@@ -45,6 +48,7 @@ function TryLogin() {
 }
 
 function TryRegister() {
+        // Check if the passwords match, if they don't then give a little alert
         if (document.getElementById("RegisterPassword").value !== document.getElementById("RegisterRepeatPassword").value) {
                 document.getElementById("registerAlertText").innerHTML = "Passwords do not match!";
                 return
@@ -71,6 +75,8 @@ var LoginCallback = function (result, error) {
                 $('#accountModal').modal('hide');
                 $('#signInBtn').hide();
 
+                process.env.isLoggedIn = true;
+
                 PlayFabClientSDK.GetPlayerProfile({
                         PlayFabId: result.data.PlayFabId,
                         ProfileConstraints: {
@@ -79,7 +85,8 @@ var LoginCallback = function (result, error) {
                 }, function (response, error) {
                         if (response !== null) {
                                 // What will happen after the register is successful? Go crazy!
-                                document.getElementById("AccountInfo").innerHTML = response.data.PlayerProfile.DisplayName; //Username; //"Successfully requested account!";
+                                $('#AccountInfo').show();
+                                document.getElementById("AccountInfo").innerHTML = response.data.PlayerProfile.DisplayName;
                         } else if (error !== null) {
                                 // Do whatever you want to do with errors here.
                         }
@@ -101,7 +108,7 @@ var RegisterCallBack = function (result, error) {
                 PlayFabClientSDK.UpdateUserTitleDisplayName({
                         DisplayName: document.getElementById("RegisterUsername").value
                 }, function (response, error) {
-                        
+
                 });
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
