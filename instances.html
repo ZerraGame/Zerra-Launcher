@@ -196,14 +196,6 @@
 											fs.mkdir(zpath + newInstance_name + "/Mods", { recursive: true }, function(){ if(err){console.log(err)} });
 											fs.mkdir(zpath + newInstance_name + "/Servers", { recursive: true }, function(){ if(err){console.log(err)} });
 
-											//Hack Arpaesis
-											var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/';
-											if (newInstance_ver != 'latest') {
-												request('http://216.53.217.165:8080/Game/Zerra-' + newInstance_ver + '.jar').pipe(fs.createWriteStream(tempPath + 'Zerra-' + newInstance_ver + '.jar'));
-											} else {
-												request('http://216.53.217.165:8080/Game/latest').pipe(fs.createWriteStream(tempPath + 'Zerra-' + newInstance_ver + '.jar'));
-											}
-
 											var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/Zerra-' + newInstance_ver + '.jar';
 
 											if (newInstance_ver != 'latest') {
