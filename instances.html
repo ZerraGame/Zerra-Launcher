@@ -281,16 +281,12 @@
 					img.src = files[0] + '?' + new Date().getTime();
 					img.addEventListener("load", function() { //Only continue if the image has fully loaded
 						if (img.width && img.height) { //Check if the image... well is something.
-							if (img.width == img.height) {
 								if (img.width == img.height) {
 									$("#previewImg").attr("src", files[0] + '?' + new Date().getTime());
 									newInstance_pathimg = files[0];
 								} else {
 									$("#alertText").text("The selected icon's width does not equal its height!");
 								}
-							} else {
-								$("#alertText").text("Selected image isn't a square.");
-							}
 						} else {
 							$("#alertText").text("Selected image couldn't be loaded.");
 						}
