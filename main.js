@@ -11,11 +11,11 @@ let mainWindow;
 //init some directories
 const zerra_path = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/';
 
-var mkdirp = require('mkdirp');
+var fse = require('fs-extra');
 
-mkdirp(zerra_path + "/Instances/", {});
-mkdirp(zerra_path + "/Settings/", {});
-mkdirp(zerra_path + "/Shared/", {});
+fse.ensureDir(zerra_path + "/Instances/");
+fse.ensureDir(zerra_path + "/Settings/");
+fse.ensureDir(zerra_path + "/Shared/");
 
 // Listen for app to be ready
 app.on('ready', function () {
