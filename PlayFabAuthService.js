@@ -22,7 +22,7 @@ function Load() {
         PlayFab.settings.titleId = jsonContents.database_key;
 
         // Check if the account should be signed back in
-        if (settings.getSettings().RememberEmail && settings.getSettings().KeepLoggedIn) {
+        if (settings.getSettings().RememberInfo && settings.getSettings().KeepLoggedIn) {
                 session.defaultSession.cookies.get({}, (error, cookies) => {
                         for (var i = 0; i < cookies.length; i++) {
                                 if (cookies[i].name === "Session_EMAIL" && cookies[i + 1].name === "Session_PASSWORD") {
@@ -137,7 +137,7 @@ var LoginCallback = function (result, error) {
                         }
                 });
 
-                if (settings.getSettings().RememberEmail && GetElementValue("AccountEmail") && GetElementValue("AccountPassword")) { // && cookies.getCookie('Session_EMAIL') && cookies.getCookie('Session_PASSWORD')) {
+                if (settings.getSettings().RememberInfo && GetElementValue("AccountEmail") && GetElementValue("AccountPassword")) { // && cookies.getCookie('Session_EMAIL') && cookies.getCookie('Session_PASSWORD')) {
                         cookies.setCookie("Session_EMAIL", GetElementValue("AccountEmail"));
                         cookies.setCookie("Session_PASSWORD", GetElementValue("AccountPassword"));
                 }
