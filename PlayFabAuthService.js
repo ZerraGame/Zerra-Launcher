@@ -6,7 +6,7 @@ const cookies = require('./cookies.js');
 const settings = require('./settings.js');
 
 let remote = require('electron').remote;
-let session = remote.session;
+let sessionCookies = remote.session.defaultSession.cookies;
 
 var sendFeedBack = true;
 
@@ -23,26 +23,35 @@ function Load() {
 
         // Check if the account should be signed back in
         if (settings.getSettings().RememberInfo && settings.getSettings().KeepLoggedIn) {
-                session.defaultSession.cookies.get({}, (error, cookies) => {
+                sessionCookies.get({}, (error, cookies) => {
                         for (var i = 0; i < cookies.length; i++) {
                                 if (cookies[i].name === "Session_EMAIL" && cookies[i + 1].name === "Session_PASSWORD") {
                                         if (cookies[i].value && cookies[i + 1].value) {
                                                 $('#accountModal').modal('hide');
                                                 $('#signInBtn').hide();
 
+                                                sendFeedBack = false;
+
                                                 TryLogin(cookies[i].value, cookies[i + 1].value);
 
-                                                sendFeedBack = false;
+                                                document.getElementById("AccountEmail").value = cookies[i].value;
+                                                document.getElementById("AccountPassword").value = cookies[i + 1].value;
+
+                                                document.getElementById("loginAlertText").innerHTML = "";
                                         }
                                 }
                         }
                 });
         } else if (settings.getSettings().RememberEmail) {
-                session.defaultSession.cookies.get({}, (error, cookies) => {
+                sessionCookies.get({}, (error, cookies) => {
                         for (var i = 0; i < cookies.length; i++) {
                                 if (cookies[i].name === "Session_EMAIL" && cookies[i + 1].name === "Session_PASSWORD") {
-                                        document.getElementById("AccountEmail").innerHTML = cookies[i];
-                                        document.getElementById("AccountPassword").innerHTML = cookies[i + 1];
+                                        if (cookies[i].value && cookies[i + 1].value) {
+                                                document.getElementById("AccountEmail").value = cookies[i].value;
+                                                document.getElementById("AccountPassword").value = cookies[i + 1].value;
+
+                                                document.getElementById("loginAlertText").innerHTML = "";
+                                        }
                                 }
                         }
                 });  
@@ -64,16 +73,11 @@ function Load() {
 
 // Sign the user out of the launcher
 function SignOut() {
-        cookies.setCookie("Session_EMAIL", null);
-        cookies.setCookie("Session_PASSWORD", null);
-
         $('#signInBtn').show();
         $('#AccountInfo').hide();
 }
 
 function TryLogin(Email, Password) {
-        sendFeedBack = true;
-
         // Create a login request for PlayFab
         var loginRequest = {
 
@@ -87,11 +91,9 @@ function TryLogin(Email, Password) {
 }
 
 function TryRegister(Usernamme, Email, Password, RepeatPassword) {
-        sendFeedBack = true;
-
         // Check if the passwords match, if they don't then give a little alert
         if (Password !== RepeatPassword) {
-                document.getElementById("registerAlertText").innerHTML = "Passwords do not match!";
+                Alert("registerAlertText", "Passwords do not match!");
 
                 return;
         }
@@ -111,8 +113,7 @@ function TryRegister(Usernamme, Email, Password, RepeatPassword) {
 var LoginCallback = function (result, error) {
         if (result !== null) {
                 // What will happen after the login is successful? Go crazy!
-                if (sendFeedBack)
-                        document.getElementById("loginAlertText").innerHTML = "Successfully logged-in!";
+                Alert("registerAlertText", "Successfully logged-in!");
 
                 // Close the login modal
                 $('#accountModal').modal('hide');
@@ -141,18 +142,17 @@ var LoginCallback = function (result, error) {
                         cookies.setCookie("Session_EMAIL", GetElementValue("AccountEmail"));
                         cookies.setCookie("Session_PASSWORD", GetElementValue("AccountPassword"));
                 }
+
+                sendFeedBack = true;
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
-                if (sendFeedBack)
-                        document.getElementById("loginAlertText").innerHTML = "Oops! There was a problem!";
+                Alert("registerAlertText", "Oops! There was a problem!");
         }
 }
 
 var RegisterCallBack = function (result, error) {
         if (result !== null) {
-                // What will happen after the register is successful? Go crazy!
-                if (sendFeedBack)
-                        document.getElementById("registerAlertText").innerHTML = "Successfully registered account!";
+                Alert("registerAlertText", "Successfully registered account!");
 
                 // Close the register modal
                 $('#registerModal').modal('hide');
@@ -162,14 +162,23 @@ var RegisterCallBack = function (result, error) {
                 }, function (response, error) {
 
                 });
+
+                sendFeedBack = true;
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
-                if (sendFeedBack)
-                        document.getElementById("registerAlertText").innerHTML = "Oops! There was a problem!";
+                Alert("registerAlertText", "Oops! There was a problem!");
         }
 }
 
 // A function to get a elements value. Just here to keep code clean.
 function GetElementValue(name) {
         return document.getElementById(name).value;
+}
+
+function Alert(alertElement, text) {
+        if (sendFeedBack === true) {
+                document.getElementById("registerAlertText").innerHTML = "Oops! There was a problem!";
+        } else {
+                sendFeedBack = false;
+        }
 }
