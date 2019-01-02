@@ -4,6 +4,7 @@ $(document).ready(function () {
 
 const cookies = require('./cookies.js');
 const settings = require('./settings.js');
+const default_settings = require('./default_settings.js');
 
 let remote = require('electron').remote;
 let sessionCookies = remote.session.defaultSession.cookies;
@@ -13,13 +14,8 @@ var sendFeedBack = true;
 function Load() {
         'use strict';
 
-        // Read our playfab settings JSON file
-        const fs = require('fs');
-
-        let fileContents = fs.readFileSync('playfab_settings.json');
-        let jsonContents = JSON.parse(fileContents);
-
-        PlayFab.settings.titleId = jsonContents.database_key;
+        // Set our TitleID
+        PlayFab.settings.titleId = default_settings.getDatabaseKey();
 
         // Check if the account should be signed back in
         if (settings.getSettings().RememberInfo && settings.getSettings().KeepLoggedIn) {
@@ -80,7 +76,6 @@ function SignOut() {
 function TryLogin(Email, Password) {
         // Create a login request for PlayFab
         var loginRequest = {
-
                 Email: Email,
                 Password: Password,
                 TitleId: PlayFab.settings.titleId
@@ -90,17 +85,21 @@ function TryLogin(Email, Password) {
         PlayFabClientSDK.LoginWithEmailAddress(loginRequest, LoginCallback);
 }
 
-function TryRegister(Usernamme, Email, Password, RepeatPassword) {
+function TryRegister(Username, Email, Password, RepeatPassword) {
         // Check if the passwords match, if they don't then give a little alert
         if (Password !== RepeatPassword) {
                 Alert("registerAlertText", "Passwords do not match!");
 
                 return;
+        } else if (!Username || !Email || !Password || !RepeatPassword) {
+                Alert("registerAlertText", "All fields are required.");
+
+                return; 
         }
 
         // Create a register request for PlayFab
         var registerRequest = {
-                Username: Usernamme,
+                Username: Username,
                 Email: Email,
                 Password: Password,
                 TitleId: PlayFab.settings.titleId
@@ -177,7 +176,7 @@ function GetElementValue(name) {
 
 function Alert(alertElement, text) {
         if (sendFeedBack === true) {
-                document.getElementById("registerAlertText").innerHTML = "Oops! There was a problem!";
+                document.getElementById(alertElement).innerHTML = text;
         } else {
                 sendFeedBack = false;
         }
