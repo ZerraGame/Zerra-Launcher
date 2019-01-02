@@ -44,7 +44,7 @@
 						<div class="form-group">
 							<label for="exampleInputPassword1">Instance Version</label>
 							<br>
-							<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+							<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownVersionButton" data-toggle="dropdown" aria-haspopup="true"
 							 aria-expanded="false">
 								Version
 							</button>
@@ -76,7 +76,7 @@
 						</div>
 					</div>
 					<div class="modal-footer">
-						<p id="alertText"></p>
+						<p id="newAlertText"></p>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-success" onclick="createInstance()" id="createInstance">Create</button>
 					</div>
@@ -104,13 +104,27 @@
 							<label id="impInstance_name" for="exampleInputPassword1"></label>
 							<br>
 							<br>
+							<label id="impInstance_ver" for="exampleInputPassword1"></label>
+							<br>
+							<br>
 							<label id="impInstance_img" for="exampleInputPassword1"></label>
 							<br>
 							<img id="impInstance_previmg"></img>
+							<br>
+							<br>
+							<div class="btn-group">
+								<button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" id="dropdownImpMethodButton" aria-haspopup="true" aria-expanded="false">
+									Importing Method
+								</button>
+								<div class="dropdown-menu">
+									<a class="dropdown-item" href="#" onclick="impInstanceMethod(this)">Copy</a>
+									<a class="dropdown-item" href="#" onclick="impInstanceMethod(this)">Move</a>
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="modal-footer">
-						<p id="alertText"></p>
+						<p id="impAlertText"></p>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-success" onclick="importInstance()" id="importInstance">Import</button>
 					</div>
@@ -129,6 +143,8 @@
 		var instances_holder = document.getElementById('instances');
 
 		var Shuffle = require('shufflejs');
+		
+		const fse = require('fs-extra');
 
 		var shuffle = new Shuffle(instances_holder, {
 			itemSelector: '.instance',
@@ -162,8 +178,6 @@
 								var img = document.createElement('img');
 								img.className = 'instance-img';
 								img.src = zpath+"/"+dir+"/"+data.icon;
-
-								console.log(data.icon);
 
 								instance.appendChild(img);
 
@@ -272,24 +286,24 @@
 											}
 										} else {
 											console.log(err);
-											$("#alertText").text("Couldn't save an instance image!");
+											$("#newAlertText").text("Couldn't save an instance image!");
 										}
 									});
 								} else {
-									$("#alertText").text("Couldn't create an instance directory!");
+									$("#newAlertText").text("Couldn't create an instance directory!");
 								}
 							});
 						} else {
-							$("#alertText").text("An instance with that name already exists!");
+							$("#newAlertText").text("An instance with that name already exists!");
 						}
 					} else {
-						$("#alertText").text("No version selected!");
+						$("#newAlertText").text("No version selected!");
 					}
 				} else {
-					$("#alertText").text("The instance name can be no greater than 32 characters!");
+					$("#newAlertText").text("The instance name can be no greater than 32 characters!");
 				}
 			} else {
-				$("#alertText").text("The name of the instance is not valid!");
+				$("#newAlertText").text("The name of the instance is not valid!");
 			}
 		}
 
@@ -319,10 +333,10 @@
 									$("#previewImg").attr("src", files[0] + '?' + new Date().getTime());
 									newInstance_pathimg = files[0];
 								} else {
-									$("#alertText").text("The selected icon's width does not equal its height!");
+									$("#newAlertText").text("The selected icon's width does not equal its height!");
 								}
 						} else {
-							$("#alertText").text("Selected image couldn't be loaded.");
+							$("#newAlertText").text("Selected image couldn't be loaded.");
 						}
 					});
 				}
@@ -333,7 +347,7 @@
 			const { dialog } = require('electron').remote;
 			const path = require('path');
 
-			$("#dropdownMenuButton").text(element.id);
+			$("#dropdownVersionButton").text(element.id);
 
 			newInstance_ver = element.id;
 		}
@@ -352,6 +366,123 @@
 
 		//!!Instance Importing!!
 
+		var impInstance_path;
+		var impInstance_method;
+
+		function importInstance(){
+			if(impInstance_method == "Move"){
+				fs.readdir(impInstance_path, function(err){ //Check if instance still exists
+					if(!err){
+
+						fs.readFile(impInstance_path + "/info.json", function(err, jdata){
+							if(!err){
+								var data = JSON.parse(jdata) //again unJSONify
+								if(data.name && data.version && data.icon){ //Check if everything is in place, again
+									if (!fs.existsSync(zpath + data.name + "/")) { //Basically check if there is an instance with the same name, aaaagain...
+										fse.move(impInstance_path, zpath+"/"+data.name, function(){
+											if(!err){
+												//Instance Div
+												var instance = document.createElement('div');
+												instance.className = 'instance';
+												instance.setAttribute("id", instances_holder.childElementCount);
+												instance.addEventListener("onclick", openInstance(instance.getAttribute("id")));
+
+												//Instance's Image
+												var img = document.createElement('img');
+												img.className = 'instance-img';
+												img.src = impInstance_path+"/"+data.icon;
+
+												instance.appendChild(img);
+
+												//Instance's Name
+												var name = document.createElement('h1');
+												name.className = 'instance-name';
+												name.innerText = data.name;
+
+												instance.appendChild(name);
+
+												instances_holder.appendChild(instance);
+
+												shuffle.add([instance]);
+
+												$('#impInstanceModal').modal('hide');
+											} else {
+												$("#impAlertText").text("Couldn't create an instance directory!");
+											}
+										});
+									} else {
+										$("#impAlertText").text("An instance with that name already exists!");
+									}
+								} else {
+									$("#impAlertText").text("Selected instance is possibly corrupted.");
+								}
+							} else {
+								$("#impAlertText").text("Selected instance is possibly corrupted.");
+							}
+						});
+
+					} else {
+						$("#impAlertText").text("Selected instance couldn't be loaded. It was either deleted or moved.");
+					}
+				});
+			}else if(impInstance_method == "Copy"){
+				fs.readdir(impInstance_path, function(err){ //Check if instance still exists
+					if(!err){
+
+						fs.readFile(impInstance_path + "/info.json", function(err, jdata){
+							if(!err){
+								var data = JSON.parse(jdata) //again unJSONify
+								if(data.name && data.version && data.icon){ //Check if everything is in place, again
+									if (!fs.existsSync(zpath + data.name + "/")) { //Basically check if there is an instance with the same name, aaaagain...
+										fse.copy(impInstance_path, zpath+"/"+data.name, function(){
+											if(!err){
+												//Instance Div
+												var instance = document.createElement('div');
+												instance.className = 'instance';
+												instance.setAttribute("id", instances_holder.childElementCount);
+												instance.addEventListener("onclick", openInstance(instance.getAttribute("id")));
+
+												//Instance's Image
+												var img = document.createElement('img');
+												img.className = 'instance-img';
+												img.src = impInstance_path+"/"+data.icon;
+
+												instance.appendChild(img);
+
+												//Instance's Name
+												var name = document.createElement('h1');
+												name.className = 'instance-name';
+												name.innerText = data.name;
+
+												instance.appendChild(name);
+
+												instances_holder.appendChild(instance);
+
+												shuffle.add([instance]);
+
+												$('#impInstanceModal').modal('hide');
+											} else {
+												$("#impAlertText").text("Couldn't create an instance directory!");
+											}
+										});
+									} else {
+										$("#impAlertText").text("An instance with that name already exists!");
+									}
+								} else {
+									$("#impAlertText").text("Selected instance is possibly corrupted.");
+								}
+							} else {
+								$("#impAlertText").text("Selected instance is possibly corrupted.");
+							}
+						});
+
+					} else {
+						$("#impAlertText").text("Selected instance couldn't be loaded. It was either deleted or moved.");
+					}
+				});
+			}
+		}
+
 		function impInstanceSelect(){
 			const { dialog } = require('electron').remote;
 			const path = require('path');
@@ -364,9 +495,42 @@
 				if (files !== undefined) {
 					frame: false
 
-					
+					fs.readdir(files[0], function(err){
+						if(!err){
+							fs.readFile(files[0]+"/info.json", function(err, jdata){
+								if(!err){
+									var data = JSON.parse(jdata); //again unJSONify
+									if(data.name && data.version && data.icon){ //Check if everything is in place
+										if (!fs.existsSync(zpath + "/" + data.name + "/")) { //Basically check if there is an instance with the same name
+											$("#impInstance_name").text("Instance Name: "+data.name);
+											$("#impInstance_ver").text("Instance Version: "+data.version);
+											$("#impInstance_img").text("Instance Icon:");
+
+											$("#impInstance_previmg").attr("width", 64);
+											$("#impInstance_previmg").attr("height", 64);
+											$("#impInstance_previmg").attr("src", files[0]+"/"+data.icon);
+											impInstance_path = files[0];
+										} else {
+											$("#impAlertText").text("An instance with that name already exists!");
+										}
+									} else {
+										$("#impAlertText").text("Selected instance is possibly corrupted.");
+									}
+								} else {
+									$("#impAlertText").text("Selected instance is possibly corrupted.");
+								}
+							});
+						}else{
+							$("#impAlertText").text("Selected instance couldn't be loaded.");
+						}
+					});
 				}
 			});
+		}
+
+		function impInstanceMethod(element){
+			$("#dropdownImpMethodButton").text(element.text);
+			impInstance_method = element.text;
 		}
 
 		//!!End Of Instance Importing!!
