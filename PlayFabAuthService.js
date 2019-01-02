@@ -42,7 +42,7 @@ function Load() {
                                 }
                         }
                 });
-        } else if (settings.getSettings().RememberEmail) {
+        } else if (settings.getSettings().RememberInfo) {
                 sessionCookies.get({}, (error, cookies) => {
                         for (var i = 0; i < cookies.length; i++) {
                                 if (cookies[i].name === "Session_EMAIL" && cookies[i + 1].name === "Session_PASSWORD") {
