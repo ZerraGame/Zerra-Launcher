@@ -22,16 +22,18 @@ function Load() {
         PlayFab.settings.titleId = jsonContents.database_key;
 
         // Check if the account should be signed back in
-        if (settings.getSettings().RememberEmail && settings.getSettings().KeepLoggedIn && cookies.getCookie('Session_EMAIL') !== null && cookies.getCookie('Session_PASSWORD') !== null) {
+        if (settings.getSettings().RememberEmail && settings.getSettings().KeepLoggedIn) {
                 session.defaultSession.cookies.get({}, (error, cookies) => {
                         for (var i = 0; i < cookies.length; i++) {
                                 if (cookies[i].name === "Session_EMAIL" && cookies[i + 1].name === "Session_PASSWORD") {
-                                        $('#accountModal').modal('hide');
-                                        $('#signInBtn').hide();
+                                        if (cookies[i].value && cookies[i + 1].value) {
+                                                $('#accountModal').modal('hide');
+                                                $('#signInBtn').hide();
 
-                                        TryLogin(cookies[i].value, cookies[i + 1].value);
+                                                TryLogin(cookies[i].value, cookies[i + 1].value);
 
-                                        sendFeedBack = false;
+                                                sendFeedBack = false;
+                                        }
                                 }
                         }
                 });
@@ -39,8 +41,8 @@ function Load() {
                 session.defaultSession.cookies.get({}, (error, cookies) => {
                         for (var i = 0; i < cookies.length; i++) {
                                 if (cookies[i].name === "Session_EMAIL" && cookies[i + 1].name === "Session_PASSWORD") {
-                                        GetElementHTML("AccountEmail") = cookies[i];
-                                        GetElementHTML("AccountPassword") = cookies[i + 1];
+                                        document.getElementById("AccountEmail").innerHTML = cookies[i];
+                                        document.getElementById("AccountPassword").innerHTML = cookies[i + 1];
                                 }
                         }
                 });  
@@ -89,7 +91,7 @@ function TryRegister(Usernamme, Email, Password, RepeatPassword) {
 
         // Check if the passwords match, if they don't then give a little alert
         if (Password !== RepeatPassword) {
-                GetElementHTML("registerAlertText") = "Passwords do not match!";
+                document.getElementById("registerAlertText").innerHTML = "Passwords do not match!";
 
                 return;
         }
@@ -110,7 +112,7 @@ var LoginCallback = function (result, error) {
         if (result !== null) {
                 // What will happen after the login is successful? Go crazy!
                 if (sendFeedBack)
-                        GetElementHTML("loginAlertText") = "Successfully logged-in!";
+                        document.getElementById("loginAlertText").innerHTML = "Successfully logged-in!";
 
                 // Close the login modal
                 $('#accountModal').modal('hide');
@@ -142,7 +144,7 @@ var LoginCallback = function (result, error) {
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
                 if (sendFeedBack)
-                        GetElementHTML("loginAlertText") = "Oops! There was a problem!";
+                        document.getElementById("loginAlertText").innerHTML = "Oops! There was a problem!";
         }
 }
 
@@ -150,7 +152,7 @@ var RegisterCallBack = function (result, error) {
         if (result !== null) {
                 // What will happen after the register is successful? Go crazy!
                 if (sendFeedBack)
-                        GetElementHTML("registerAlertText") = "Successfully registered account!";
+                        document.getElementById("registerAlertText").innerHTML = "Successfully registered account!";
 
                 // Close the register modal
                 $('#registerModal').modal('hide');
@@ -163,16 +165,11 @@ var RegisterCallBack = function (result, error) {
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
                 if (sendFeedBack)
-                        GetElementHTML("registerAlertText") = "Oops! There was a problem!";
+                        document.getElementById("registerAlertText").innerHTML = "Oops! There was a problem!";
         }
 }
 
 // A function to get a elements value. Just here to keep code clean.
 function GetElementValue(name) {
         return document.getElementById(name).value;
-}
-
-// A function to get a elements innerHTML. Just here to keep code clean.
-function GetElementHTML(name) {
-        return document.getElementById(name).innerHTML;
 }
