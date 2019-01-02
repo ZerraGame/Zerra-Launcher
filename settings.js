@@ -1,3 +1,5 @@
+const default_settings = require('./default_settings.js');
+
 module.exports = {
     getSettings: function() {
         'use strict';
@@ -13,10 +15,7 @@ module.exports = {
 
             return settingsContents;
         } else {
-            let defaultFile = fs.readFileSync('defaults/settings.json');
-            let defaultContents = JSON.parse(defaultFile);
-
-            return defaultContents;
+            return default_settings.getDefaultSettings();
         }
     }
 }

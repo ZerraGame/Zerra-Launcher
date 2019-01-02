@@ -118,7 +118,6 @@
         const fs = require('fs');
 
         var path = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Settings/settings.json';
-        var def = 'defaults/settings.json';
 
         const form = document.getElementById('settings');
 
@@ -159,40 +158,36 @@
                 console.log(jsonSettings);
             });
         } else {
-            fs.readFile(def, 'utf8', function (err, data) {
-                if (err) {
-                    return console.log(err);
-                }
+            const default_settings = require('./default_settings.js');
 
-                var jsonSettings = JSON.parse(data);
+            var jsonSettings = default_settings.getDefaultSettings();
 
-                var elements = form.querySelectorAll("input, select, textarea");
+            var elements = form.querySelectorAll("input, select, textarea");
 
-                for (var i = 0; i < elements.length; i++) {
+            for (var i = 0; i < elements.length; i++) {
 
-                    var element = elements[i];
+                var element = elements[i];
 
-                    var value = jsonSettings[element.name];
+                var value = jsonSettings[element.name];
 
-                    if (element.type === 'checkbox') {
-                        if (value == true) {
-                            element.checked = true;
-                            console.log('set checkbox with name ' + element.name + ' to true.');
-                        } else {
-                            element.checked = false;
-                            console.log('set checkbox with name ' + element.name + ' to false.');
-                        }
-                    } else if (element.type === 'radio') {
-                        if (jsonSettings[element.name] == element.id) {
-                            element.checked = true;
-                            console.log('set checkbox with name ' + element.name + ' to true.');
-                        }
-                    } else if (element.type === 'text') {
-                        element.value = value;
+                if (element.type === 'checkbox') {
+                    if (value == true) {
+                        element.checked = true;
+                        console.log('set checkbox with name ' + element.name + ' to true.');
+                    } else {
+                        element.checked = false;
+                        console.log('set checkbox with name ' + element.name + ' to false.');
                     }
+                } else if (element.type === 'radio') {
+                    if (jsonSettings[element.name] == element.id) {
+                        element.checked = true;
+                        console.log('set checkbox with name ' + element.name + ' to true.');
+                    }
+                } else if (element.type === 'text') {
+                    element.value = value;
                 }
-                console.log(jsonSettings);
-            });
+            }
+            console.log(jsonSettings);
         }
 
 
