@@ -168,6 +168,10 @@ var RegisterCallBack = function (result, error) {
                         DisplayName: document.getElementById("RegisterUsername").value
                 }, function (response, error) {});
 
+                PlayFabClientSDK.UpdateAvatarUrl({
+                        ImageUrl: 'https://i.imgur.com/Vnd3AXc.png'
+                }, function (response, error) {});
+
                 sendFeedBack = true;
         } else if (error !== null) {
                 // Do whatever you want to do with errors here.
