@@ -14,6 +14,8 @@ function Load() {
         // Set our TitleID
         PlayFab.settings.titleId = default_settings.getDatabaseKey();
 
+        cookies.getCookies((error, cookies) => { console.log(cookies); });
+
         // Check if the account should be signed back in
         if (settings.getSettings().RememberInfo && settings.getSettings().KeepLoggedIn) {
                 cookies.getCookies((error, cookies) => {
@@ -123,7 +125,9 @@ var LoginCallback = function (result, error) {
                         PlayFabId: result.data.PlayFabId,
                         ProfileConstraints: {
                                 ShowAvatarUrl: true,
-                                ShowDisplayName: true
+                                ShowDisplayName: true,
+                                ShowCreated: true,
+                                ShowLastLogin: true
                         }
                 }, function (response, error) {
                         if (response !== null) {
@@ -131,7 +135,11 @@ var LoginCallback = function (result, error) {
                                 $('#AccountInfo').show();
 
                                 document.getElementById("AccountInfo").innerHTML = response.data.PlayerProfile.DisplayName;
+
+                                cookies.setCookie("Session_DISPLAYNAME", response.data.PlayerProfile.DisplayName);
                                 cookies.setCookie("Session_AVATAR", response.data.PlayerProfile.AvatarUrl);
+                                cookies.setCookie("Session_CREATIONDATE", response.data.PlayerProfile.Created);
+                                cookies.setCookie("Session_LASTLOGINDATE", response.data.PlayerProfile.LastLogin);
                         } else if (error !== null) {
                                 // Do whatever you want to do with errors here.
                         }

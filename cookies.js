@@ -9,7 +9,7 @@ module.exports = {
             url: 'http://localhost/',
             expirationDate: Date.now()
         }, (error) => {
-            console.log("Set cookie: " + name + " => " + data);
+            console.log("Set cookie: " + key + " => " + data);
         });
     },
     getCookie: function getCookie(key, callback) {
