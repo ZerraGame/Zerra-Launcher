@@ -122,13 +122,16 @@ var LoginCallback = function (result, error) {
                 PlayFabClientSDK.GetPlayerProfile({
                         PlayFabId: result.data.PlayFabId,
                         ProfileConstraints: {
+                                ShowAvatarUrl: true,
                                 ShowDisplayName: true
                         }
                 }, function (response, error) {
                         if (response !== null) {
                                 // What will happen after the register is successful? Go crazy!
                                 $('#AccountInfo').show();
+
                                 document.getElementById("AccountInfo").innerHTML = response.data.PlayerProfile.DisplayName;
+                                cookies.setCookie("Session_AVATAR", response.data.PlayerProfile.AvatarUrl);
                         } else if (error !== null) {
                                 // Do whatever you want to do with errors here.
                         }
@@ -155,9 +158,7 @@ var RegisterCallBack = function (result, error) {
 
                 PlayFabClientSDK.UpdateUserTitleDisplayName({
                         DisplayName: document.getElementById("RegisterUsername").value
-                }, function (response, error) {
-
-                });
+                }, function (response, error) {});
 
                 sendFeedBack = true;
         } else if (error !== null) {
