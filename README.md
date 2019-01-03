@@ -32,6 +32,7 @@ Our launcher uses the following main dependencies:
 * Bootstrap 4
 * Shuffle.js
 * fs-extra
+* markdown
 * Electron Packager (dev)
 * Electron Winstaller (dev)
 
