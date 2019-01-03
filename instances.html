@@ -50,6 +50,7 @@
 									//Populate this list with versions
 									const request = require('request');
 									const fs = require('fs');
+									const path = require('path');
 
 									request('http://216.53.217.165:8080/FetchGameVersions', { json: true }, (err, res, body) => {
 
@@ -135,8 +136,6 @@
 
 	<script>
 		window.jQuery = window.$ = require('jquery');
-
-		const path = require('path');
 
 		var zpath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Instances/';
 
@@ -258,8 +257,8 @@
 
 												var contentSize;
 												req.on('response', function(response) {
-													console.log(response.statusCode); // 200
-													console.log('CONTENT SIZE - ' + response.headers['content-length']); // 'image/png'
+													console.log(response.statusCode);
+													console.log('CONTENT SIZE - ' + response.headers['content-length']);
 													contentSize = response.headers['content-length'];
 												});
 
@@ -292,8 +291,78 @@
 													}
 												});
 											}else {
-												// Close the modal immediately, the file was already downloaded before.
-												$('#newInstanceModal').modal('hide');
+
+												var fileName = path.basename(tempPath);
+												
+												if(fileName.includes('latest')) {
+													fileName = fileName.replace('Zerra-', '');
+													fileName = fileName.replace('.jar', '');
+												}
+
+												var req = request('http://216.53.217.165:8080/Game/' + fileName);
+
+												req.on('response', function(response) {
+													var serverLength = response.headers['content-length'];
+
+													const stats = fs.statSync(tempPath);
+													const localLength = stats.size;
+
+													if(localLength == serverLength) {
+														console.log('FILE PASSED LENGTH VERIFICATION. DETEAILS BELOW: ');
+														console.log('SERVER LENGTH: ' + serverLength);
+														console.log('LOCAL FILE LENGTH: ' + localLength);
+													}else {
+														console.log('FILE DID (((NOT))) PASS LENGTH VERIFICATION. DETAILS BELOW: ');
+														console.log('SERVER LENGTH: ' + serverLength);
+														console.log('LOCAL FILE LENGTH: ' + localLength);
+														console.log('REDOWNLOADING...');
+
+														if (newInstance_ver != 'latest') {
+															var req = request('http://216.53.217.165:8080/Game/Zerra-' + newInstance_ver + '.jar');
+														} else {
+															var req = request('http://216.53.217.165:8080/Game/latest');
+														}
+
+														req.pipe(fs.createWriteStream(tempPath));
+
+														var contentSize;
+														req.on('response', function(response) {
+															console.log(response.statusCode);
+															console.log('CONTENT SIZE - ' + response.headers['content-length']);
+															contentSize = response.headers['content-length'];
+														});
+
+														var progress = 0;
+														var progressBar = document.getElementById("DownloadProgress");
+														req.on('data', function (chunk) {
+															var segment = chunk.length;
+															progress += segment;
+															progressBar.style.width = Math.ceil((progress / contentSize * 100)) + '%';
+															
+															console.log('PROGRESS - ' + (progress / contentSize * 100) + '%');
+
+															if((progress / contentSize) == 1) {
+																//Hide this modal. We are done downloading.
+																setTimeout(function(){
+																	$('#newInstanceModal').modal('hide');
+																}, 1000);
+																
+																//Reset the progress bar.
+																setTimeout(function(){
+																	progressBar.style.width = 0 + '%';
+																}, 1250);
+																
+															}
+														});
+
+														fs.writeFile(zpath + newInstance_name + "/info.json", infoToJSON(), 'utf8', function(err){ //Save the JSON file holding information about this instance
+															if(err){
+																console.log(err);
+															}
+														});
+													}
+													$('#newInstanceModal').modal('hide');
+												});
 											}
 										} else {
 											console.log(err);
