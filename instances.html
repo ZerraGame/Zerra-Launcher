@@ -14,8 +14,18 @@
 			<button type="button" data-toggle="modal" data-target="#impInstanceModal" id="new" class="btn btn-success">Import Instance</button>
 			<button type="button" onclick="closeWindow()" id="close" class="btn btn-danger">Close</button>
 		</div>
-		<div id="instances"> <!--Load all instances when this div has loaded-->
-			<!--Store instances-->
+		<div id="bottom-wrapper">
+			<div id="instances"> <!--Load all instances when this div has loaded-->
+				<!--Store instances-->
+			</div>
+			<!--Instance View / Manager-->
+			<div id="instance_view"> <!--Load all instances when this div has loaded-->
+				<label id="iv-name" for="exampleInputPassword1"></label>
+				<button type="button" data-toggle="modal" id="run" class="btn btn-success" style="margin-top:10px;" onclick="runInstance()" disabled>Run</button>
+				<button type="button" data-toggle="modal" id="mod" class="btn btn-success" disabled>Modify</button>
+				<button type="button" data-toggle="modal" id="mods" class="btn btn-info" disabled>Mods</button>
+				<button type="button" data-toggle="modal" id="res" class="btn btn-info" disabled>Resources</button>
+			</div>
 		</div>
 		<!--New Instance Modal-->
 		<div class="modal fade" id="newInstanceModal" tabindex="-1" role="dialog" aria-labelledby="newInstanceModalLabel" aria-hidden="true">

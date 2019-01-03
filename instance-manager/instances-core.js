@@ -23,35 +23,28 @@ window.jQuery = window.$ = require('jquery');
 
 		//!!Instance Loading!!
 		function loadInstances(){
-			fs.readdir(zpath, function(err, dirs){
+			fs.readdir(zpath + "/Instances", function(err, dirs){
 				dirs.forEach(function(dir){
-					fs.stat(zpath+"/"+dir, function(err, stats){ //Check for each instance
+					fs.stat(zpath+"/Instances/"+dir, function(err, stats){ //Check for each instance
 						if(stats.isDirectory()){ //Check if it's actually an instance/directory
-							fs.readFile(zpath+"/"+dir+"/info.json", function(err, jdata){ //Load aaaaaalll data about the instance (json data)
+							fs.readFile(zpath+"/Instances/"+dir+"/info.json", function(err, jdata){ //Load aaaaaalll data about the instance (json data)
 								var data = JSON.parse(jdata); //UnJSONify
-
 								//Instance Div
 								var instance = document.createElement('div');
 								instance.className = 'instance';
 								instance.setAttribute("id", instances_holder.childElementCount);
-								instance.addEventListener("onclick", openInstance(instance.getAttribute("id")));
-
+								instance.addEventListener("click", function(){selectInstance(this)});
 								//Instance's Image
 								var img = document.createElement('img');
 								img.className = 'instance-img';
-								img.src = zpath+"/"+dir+"/"+data.icon;
-
+								img.src = zpath+"/Instances/"+dir+"/"+data.icon;
 								instance.appendChild(img);
-
 								//Instance's Name
 								var name = document.createElement('h1');
 								name.className = 'instance-name';
 								name.innerText = data.name;
-
 								instance.appendChild(name);
-
 								instances_holder.appendChild(instance);
-
 								shuffle.add([instance]);
 							});
 						}
@@ -73,12 +66,12 @@ window.jQuery = window.$ = require('jquery');
 				if (newInstance_name.length <= 32) {
 					//No need to check the image, because it'll be a default one if not picked.
 					if (newInstance_ver != null) { //Check if user picked a version
-						if (!fs.existsSync(zpath + newInstance_name + "/")) { //Basically check if there is an instance with the same name
+						if (!fs.existsSync(zpath + "/Instances/" + newInstance_name + "/")) { //Basically check if there is an instance with the same name
 							//Instance Div
 							var instance = document.createElement('div');
 							instance.className = 'instance';
 							instance.setAttribute("id", instances_holder.childElementCount);
-							instance.addEventListener("onclick", openInstance(instance.getAttribute("id")));
+							instance.addEventListener("onclick", function(){selectInstance()});
 
 							//Instance's Image
 							var img = document.createElement('img');
@@ -98,19 +91,20 @@ window.jQuery = window.$ = require('jquery');
 
 							shuffle.add([instance]);
 
-							fs.mkdir(zpath + newInstance_name + "/", { recursive: true }, function (err) {
+							fs.mkdir(zpath + "/Instances/" + newInstance_name + "/", { recursive: true }, function (err) {
 								if (!err) {
-									fs.copyFile(newInstance_pathimg, zpath + newInstance_name + "/icon" + path.extname(newInstance_pathimg), function (err) { //Save a logo
+									fs.copyFile(newInstance_pathimg, zpath + "/Instances/" + newInstance_name + "/icon" + path.extname(newInstance_pathimg), function (err) { //Save a logo
 										if (!err) { //Only continue when there wasn't any error
 											//Create folders for each instance
-											fs.mkdir(zpath + newInstance_name + "/Saves", { recursive: true }, function(){ if(err){console.log(err)} });
-											fs.mkdir(zpath + newInstance_name + "/Mods", { recursive: true }, function(){ if(err){console.log(err)} });
-											fs.mkdir(zpath + newInstance_name + "/Servers", { recursive: true }, function(){ if(err){console.log(err)} });
+											fs.mkdir(zpath + "/Instances/" + newInstance_name + "/Saves", { recursive: true }, function(){ if(err){console.log(err)} });
+											fs.mkdir(zpath + "/Instances/" + newInstance_name + "/Mods", { recursive: true }, function(){ if(err){console.log(err)} });
+											fs.mkdir(zpath + "/Instances/" + newInstance_name + "/Servers", { recursive: true }, function(){ if(err){console.log(err)} });
 
-											var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/Zerra-' + newInstance_ver + '.jar';
+											var tempPath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Shared/' + newInstance_ver + '.jar'; //Use this? Idk Arpaesis explain yourself
 
 											if(!fs.existsSync(tempPath)) {
 												if (newInstance_ver != 'latest') {
+													console.log("b");
 													var req = request('http://216.53.217.165:8080/Game/Zerra-' + newInstance_ver + '.jar');
 												} else {
 													var req = request('http://216.53.217.165:8080/Game/latest');
@@ -148,12 +142,18 @@ window.jQuery = window.$ = require('jquery');
 													}
 												});
 
-												fs.writeFile(zpath + newInstance_name + "/info.json", infoToJSON(), 'utf8', function(err){ //Save the JSON file holding information about this instance
+												
+												fs.writeFile(zpath + "/Instances/" + newInstance_name + "/info.json", infoToJSON(), 'utf8', function(err){ //Save the JSON file holding information about this instance
 													if(err){
 														console.log(err);
 													}
 												});
-											}else {
+											} else {
+												fs.writeFile(zpath + "/Instances/" + newInstance_name + "/info.json", infoToJSON(), 'utf8', function(err){ //Save the JSON file holding information about this instance
+													if(err){
+														console.log(err);
+													}
+												});
 
 												var fileName = path.basename(tempPath);
 												
@@ -299,7 +299,8 @@ window.jQuery = window.$ = require('jquery');
 			var pinfo = { //Pure non JSON info
 				name: newInstance_name,
 				version: newInstance_ver,
-				icon: "icon"+path.extname(newInstance_pathimg) //Make it relative to the launcher to make it "portable"
+				gameFile: zpath + "/Shared/" + newInstance_ver + ".jar",
+				icon: "icon" + path.extname(newInstance_pathimg) //Make it relative to the launcher to make it "portable"
 			};
 			var info = JSON.stringify(pinfo); //JSONifny
 			return info;
@@ -320,7 +321,7 @@ window.jQuery = window.$ = require('jquery');
 						fs.readFile(impInstance_path + "/info.json", function(err, jdata){
 							if(!err){
 								var data = JSON.parse(jdata) //again unJSONify
-								if(data.name && data.version && data.icon){ //Check if everything is in place, again
+								if(data.name && data.version && data.icon && data.gameFile){ //Check if everything is in place, again
 									if (!fs.existsSync(zpath + data.name + "/")) { //Basically check if there is an instance with the same name, aaaagain...
 										fse.move(impInstance_path, zpath+"/"+data.name, function(){
 											if(!err){
@@ -328,7 +329,7 @@ window.jQuery = window.$ = require('jquery');
 												var instance = document.createElement('div');
 												instance.className = 'instance';
 												instance.setAttribute("id", instances_holder.childElementCount);
-												instance.addEventListener("onclick", openInstance(instance.getAttribute("id")));
+												instance.addEventListener("onclick", function(){selectInstance()});
 
 												//Instance's Image
 												var img = document.createElement('img');
@@ -375,7 +376,7 @@ window.jQuery = window.$ = require('jquery');
 						fs.readFile(impInstance_path + "/info.json", function(err, jdata){
 							if(!err){
 								var data = JSON.parse(jdata) //again unJSONify
-								if(data.name && data.version && data.icon){ //Check if everything is in place, again
+								if(data.name && data.version && data.icon && data.gameFile){ //Check if everything is in place, again
 									if (!fs.existsSync(zpath + data.name + "/")) { //Basically check if there is an instance with the same name, aaaagain...
 										fse.copy(impInstance_path, zpath+"/"+data.name, function(){
 											if(!err){
@@ -383,7 +384,7 @@ window.jQuery = window.$ = require('jquery');
 												var instance = document.createElement('div');
 												instance.className = 'instance';
 												instance.setAttribute("id", instances_holder.childElementCount);
-												instance.addEventListener("onclick", openInstance(instance.getAttribute("id")));
+												instance.addEventListener("onclick", function(){selectInstance()});
 
 												//Instance's Image
 												var img = document.createElement('img');
@@ -443,7 +444,7 @@ window.jQuery = window.$ = require('jquery');
 							fs.readFile(files[0]+"/info.json", function(err, jdata){
 								if(!err){
 									var data = JSON.parse(jdata); //again unJSONify
-									if(data.name && data.version && data.icon){ //Check if everything is in place
+									if(data.name && data.version && data.icon && data.gameFile){ //Check if everything is in place
 										if (!fs.existsSync(zpath + "/" + data.name + "/")) { //Basically check if there is an instance with the same name
 											$("#impInstance_name").text("Instance Name: "+data.name);
 											$("#impInstance_ver").text("Instance Version: "+data.version);
@@ -478,7 +479,52 @@ window.jQuery = window.$ = require('jquery');
 
 		//!!End Of Instance Importing!!
 
-		function openInstance(id) {
+		var selectedInstance;
+		function runInstance(){
+			const child = require('child_process'); //If anyone has a better idea to do it, feel free to tell me.
+			if(selectedInstance){
+				var name = $(selectedInstance).children(".instance-name").text();
+				if(name){
+					fs.readFile(zpath+"/Instances/"+name+"/info.json", function(err, jdata){
+						if(!err){
+							var data = JSON.parse(jdata); //unJSONify
+							if(data.name && data.version && data.icon && data.gameFile){ //Check if everything is in place
+								var execPath = data.gameFile;
+								console.log(execPath);
+								var childProcess = child.exec('start '+execPath, function (error, stdout, stderr){
+									console.log('stdout: ' + stdout);
+									console.log('stderr: ' + stderr);
+									if(error !== null){
+									console.log('exec error: ' + error);
+									}
+								});
+							} else {
+								console.log("Selected instance is possibly corrupted.");
+							}
+						} else {
+							console.log("Selected instance is possibly corrupted.");
+						}
+					});
+				}
+			}
+		}
+		function selectInstance(instance) {
+			if(!selectedInstance){
+				selectedInstance = instance;
+				$(instance).children(".instance-img").css("filter", "drop-shadow(1px 1px 10px rgb(0, 128, 255))");
+				$('#iv-name').text( $(instance).children(".instance-name").text() );
+				$('#run').prop('disabled', false);
+				$('#run').css('margin-top', 0);
+				$('#mod').prop('disabled', false);
+				$('#mods').prop('disabled', false);
+				$('#res').prop('disabled', false);
+				$('#deselect').prop('disabled', false);
+			} else {
+				$(selectedInstance).children(".instance-img").css("filter", "none");
+				selectedInstance = instance;
+				$('#iv-name').text( $(instance).children(".instance-name").text() );
+				$(instance).children(".instance-img").css("filter", "drop-shadow(1px 1px 10px rgb(0, 128, 255))");
+			}
 		}
 
 		//Just close...
