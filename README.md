@@ -26,11 +26,12 @@ Instances can be selected by using the button to the right of the **Play** butto
 ## Dependencies
 Our launcher uses the following main dependencies:
 * Electron
+* Electron Is Dev
 * Popper.js
 * jQuery
 * Bootstrap 4
 * Shuffle.js
-* Mkdirp
+* fs-extra
 * Electron Packager (dev)
 * Electron Winstaller (dev)
 
