@@ -6,9 +6,6 @@ const cookies = require('./cookies.js');
 const settings = require('./settings.js');
 const default_settings = require('./default_settings.js');
 
-let remote = require('electron').remote;
-let sessionCookies = remote.session.defaultSession.cookies;
-
 var sendFeedBack = true;
 
 function Load() {
@@ -19,19 +16,19 @@ function Load() {
 
         // Check if the account should be signed back in
         if (settings.getSettings().RememberInfo && settings.getSettings().KeepLoggedIn) {
-                sessionCookies.get({}, (error, cookies) => {
-                        for (var i = 0; i < cookies.length; i++) {
-                                if (cookies[i].name === "Session_EMAIL" && cookies[i + 1].name === "Session_PASSWORD") {
-                                        if (cookies[i].value && cookies[i + 1].value) {
+                cookies.getCookies((error, cookies) => {
+                        for (var index = 0; index < cookies.length; index++) {
+                                if (cookies[index].name === "Session_EMAIL" && cookies[index + 1].name === "Session_PASSWORD") {
+                                        if (cookies[index].value && cookies[index + 1].value) {
                                                 $('#accountModal').modal('hide');
                                                 $('#signInBtn').hide();
 
                                                 sendFeedBack = false;
 
-                                                TryLogin(cookies[i].value, cookies[i + 1].value);
+                                                TryLogin(cookies[index].value, cookies[index + 1].value);
 
-                                                document.getElementById("AccountEmail").value = cookies[i].value;
-                                                document.getElementById("AccountPassword").value = cookies[i + 1].value;
+                                                document.getElementById("AccountEmail").value = cookies[index].value;
+                                                document.getElementById("AccountPassword").value = cookies[index + 1].value;
 
                                                 document.getElementById("loginAlertText").innerHTML = "";
                                         }
@@ -39,18 +36,18 @@ function Load() {
                         }
                 });
         } else if (settings.getSettings().RememberInfo) {
-                sessionCookies.get({}, (error, cookies) => {
-                        for (var i = 0; i < cookies.length; i++) {
-                                if (cookies[i].name === "Session_EMAIL" && cookies[i + 1].name === "Session_PASSWORD") {
-                                        if (cookies[i].value && cookies[i + 1].value) {
-                                                document.getElementById("AccountEmail").value = cookies[i].value;
-                                                document.getElementById("AccountPassword").value = cookies[i + 1].value;
+                cookies.getCookies((error, cookies) => {
+                        for (var index = 0; index < cookies.length; index++) {
+                                if (cookies[index].name === "Session_EMAIL" && cookies[index + 1].name === "Session_PASSWORD") {
+                                        if (cookies[index].value && cookies[index + 1].value) {
+                                                document.getElementById("AccountEmail").value = cookies[index].value;
+                                                document.getElementById("AccountPassword").value = cookies[index + 1].value;
 
                                                 document.getElementById("loginAlertText").innerHTML = "";
                                         }
                                 }
                         }
-                });  
+                });
         }
 
         // Check for button clicks;
@@ -94,7 +91,7 @@ function TryRegister(Username, Email, Password, RepeatPassword) {
         } else if (!Username || !Email || !Password || !RepeatPassword) {
                 Alert("registerAlertText", "All fields are required.");
 
-                return; 
+                return;
         }
 
         // Create a register request for PlayFab

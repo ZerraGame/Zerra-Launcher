@@ -2,9 +2,9 @@ let remote = require('electron').remote;
 let session = remote.session;
 
 module.exports = {
-    setCookie: function setCookie(name, data) {
+    setCookie: function setCookie(key, data) {
         session.defaultSession.cookies.set({
-            name: name,
+            name: key,
             value: data,
             url: 'http://localhost/',
             expirationDate: Date.now()
@@ -12,11 +12,12 @@ module.exports = {
             console.log("Set cookie: " + name + " => " + data);
         });
     },
-    getCookie: function getCookie(name) {
+    getCookie: function getCookie(key, callback) {
         session.defaultSession.cookies.get({
-            name: name
-        }, (error, cookies) => {
-            return cookies[0].value;
-        });
+            name: key
+        }, callback);
+    },
+    getCookies: function getCookies(callback) {
+        session.defaultSession.cookies.get({}, callback);
     }
 }
