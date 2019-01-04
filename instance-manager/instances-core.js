@@ -1,6 +1,6 @@
 window.jQuery = window.$ = require('jquery');
 
-		var zpath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/Instances/';
+		var zpath = 'C:/Users/' + process.env.username + '/AppData/Roaming/.zerra/Launcher/';
 
 		var instances_holder = document.getElementById('instances');
 
