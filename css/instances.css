@@ -41,6 +41,7 @@
     display: table-cell;
     width: 20%;
     position: fixed;
+    right: 10px;
 }
 
 #iv-name { /*iv - Instance View*/
