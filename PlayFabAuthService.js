@@ -142,6 +142,7 @@ var LoginCallback = function (result, error) {
                                 //TODO: Put avatar link in src
                                 document.getElementById("AccountInfo").innerHTML = '<img class = "avatar-status" src="assets/icons/png/icon.png"/>' + response.data.PlayerProfile.DisplayName;
 
+                                cookies.setCookie("Session_PLAYFABID", result.data.PlayFabId);
                                 cookies.setCookie("Session_DISPLAYNAME", response.data.PlayerProfile.DisplayName);
                                 cookies.setCookie("Session_AVATAR", response.data.PlayerProfile.AvatarUrl);
                                 cookies.setCookie("Session_CREATIONDATE", response.data.PlayerProfile.Created);

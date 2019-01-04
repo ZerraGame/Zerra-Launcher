@@ -7,6 +7,7 @@ window.jQuery = window.$ = require('jquery');
 		var Shuffle = require('shufflejs');
 		
 		const fse = require('fs-extra');
+		const cookies = require('./cookies.js');
 
 		var shuffle = new Shuffle(instances_holder, {
 			itemSelector: '.instance',
@@ -491,12 +492,15 @@ window.jQuery = window.$ = require('jquery');
 							if(data.name && data.version && data.icon && data.gameFile){ //Check if everything is in place
 								var execPath = data.gameFile;
 								console.log(execPath);
-								var childProcess = child.exec('start '+execPath + " --client --dir " + zpath+"/Instances/"+name, function (error, stdout, stderr){
-									console.log('stdout: ' + stdout);
-									console.log('stderr: ' + stderr);
-									if(error !== null){
-									console.log('exec error: ' + error);
-									}
+								cookies.getCookie('Session_PLAYFABID', (error, cookie) => {
+									var childProcess = child.exec('start '+execPath + " --client --dir " + zpath+"/Instances/"+name + "--id "+cookie[0].value , function (error, stdout, stderr){
+										console.log('stdout: ' + stdout);
+										console.log('stderr: ' + stderr);
+										
+										if(error !== null) {
+											console.log('exec error: ' + error);
+										}
+									});
 								});
 							} else {
 								console.log("Selected instance is possibly corrupted.");
