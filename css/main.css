@@ -88,3 +88,9 @@ input[type=file] {
 .offline {
     background-color: rgb(92, 92, 92);
 }
+
+.avatar {
+    width:25px;
+    height:25px;
+    margin-right: 10px;
+}

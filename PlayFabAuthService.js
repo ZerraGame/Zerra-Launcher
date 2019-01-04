@@ -73,14 +73,17 @@ function SignOut() {
 }
 
 function TryLogin(Email, Password) {
-        $('#AccountInfo').html("Signing In...");
-        
+
         // Create a login request for PlayFab
         var loginRequest = {
                 Email: Email,
                 Password: Password,
                 TitleId: PlayFab.settings.titleId
         };
+
+        $('#signInBtn').hide();
+        $('#AccountInfo').html('Signing In...');
+        $('#AccountInfo').show();
 
         // Try to login using a email and password
         PlayFabClientSDK.LoginWithEmailAddress(loginRequest, LoginCallback);
@@ -136,8 +139,9 @@ var LoginCallback = function (result, error) {
                                 // What will happen after the register is successful? Go crazy!
                                 $('#AccountInfo').show();
 
-                                document.getElementById("AccountInfo").innerHTML = response.data.PlayerProfile.DisplayName;
-
+                                //TODO: Put avatar link in src
+                                document.getElementById("AccountInfo").innerHTML = '<img class = "avatar" src="assets/icons/png/icon.png"/>' + response.data.PlayerProfile.DisplayName;
+                                
                                 cookies.setCookie("Session_DISPLAYNAME", response.data.PlayerProfile.DisplayName);
                                 cookies.setCookie("Session_AVATAR", response.data.PlayerProfile.AvatarUrl);
                                 cookies.setCookie("Session_CREATIONDATE", response.data.PlayerProfile.Created);
