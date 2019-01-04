@@ -10,8 +10,8 @@
 <body>
         <div class="tray">
                 <div>
-                        <button type="button" class="accountbtn btn btn-success dropdown-toggle" type="button" id="AccountInfo" data-toggle="dropdown"
-                                aria-haspopup="true" aria-expanded="false" id="accountInfoBtn"></button>
+                        <button type="button" class="accountbtn btn btn-success dropdown-toggle" type="button" id="AccountInfo"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="accountInfoBtn"></button>
                         <div class="dropdown-menu" aria-labelledby="AccountInfo">
                                 <a class="dropdown-item" href="#">
                                         <span class="dot online"></span> Online</a>
@@ -22,17 +22,20 @@
                                 <a class="dropdown-item" href="#">
                                         <span class="dot offline"></span> Offline</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">View Profile</a>
+                                <a class="dropdown-item" data-toggle="modal" data-target="#profileModal" href="#">View
+                                        Profile</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" id="signout">Sign Out</a>
                         </div>
                 </div>
-                <button type="button" data-toggle="modal" data-target="#accountModal" class="accountbtn btn btn-success" id="signInBtn">Sign In</button>
+                <button type="button" data-toggle="modal" data-target="#accountModal" class="accountbtn btn btn-success"
+                        id="signInBtn">Sign In</button>
                 <button type="button" onclick="openSettings()" class="settingsbtn"></button>
         </div>
 
         <!-- Sign In Modal -->
-        <div class="modal fade close-modal" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="accountModalLabel" aria-hidden="true">
+        <div class="modal fade close-modal" id="accountModal" tabindex="-1" role="dialog" aria-labelledby="accountModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog" role="document">
                         <div class="modal-content">
                                 <div class="modal-header">
@@ -43,15 +46,19 @@
                                 </div>
                                 <div class="modal-body">
                                         <div class="form-group">
-                                                <input type="email" class="form-control" id="AccountEmail" aria-describedby="emailHelp" placeholder="Email Address" required>
+                                                <input type="email" class="form-control" id="AccountEmail"
+                                                        aria-describedby="emailHelp" placeholder="Email Address"
+                                                        required>
                                                 <!-- TODO: Update this feedback div if the login fails. -->
                                                 <div class="form-control-feedback"></div>
                                         </div>
                                         <div class="form-group">
-                                                <input type="password" class="form-control" id="AccountPassword" placeholder="Password" required>
+                                                <input type="password" class="form-control" id="AccountPassword"
+                                                        placeholder="Password" required>
                                         </div>
                                         <div class="form-group">
-                                                <small id="emailHelp" class="form-text text-muted">Don't have an account?
+                                                <small id="emailHelp" class="form-text text-muted">Don't have an
+                                                        account?
                                                         <a href="#" onclick="manageModals()">register here</a>.
                                                 </small>
                                         </div>
@@ -66,7 +73,8 @@
         </div>
 
         <!-- Register Modal -->
-        <div class="modal fade close-modal" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal fade close-modal" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog" role="document">
                         <div class="modal-content">
                                 <div class="modal-header">
@@ -77,26 +85,55 @@
                                 </div>
                                 <div class="modal-body">
                                         <div class="form-group">
-                                                <input type="email" class="form-control" id="RegisterEmail" aria-describedby="emailHelp" placeholder="Email" required>
+                                                <input type="email" class="form-control" id="RegisterEmail"
+                                                        aria-describedby="emailHelp" placeholder="Email" required>
                                                 <!-- TODO: Update this feedback div if the login fails. -->
                                                 <div class="form-control-feedback"></div>
                                         </div>
                                         <div class="form-group">
-                                                <input type="text" class="form-control" id="RegisterUsername" aria-describedby="username" placeholder="Username" required>
+                                                <input type="text" class="form-control" id="RegisterUsername"
+                                                        aria-describedby="username" placeholder="Username" required>
                                                 <!-- TODO: Update this feedback div if the login fails. -->
                                                 <div class="form-control-feedback"></div>
                                         </div>
                                         <div class="form-group">
-                                                <input type="password" class="form-control" id="RegisterPassword" placeholder="Password" required>
+                                                <input type="password" class="form-control" id="RegisterPassword"
+                                                        placeholder="Password" required>
                                         </div>
                                         <div class="form-group">
-                                                <input type="password" class="form-control" id="RegisterRepeatPassword" placeholder="Repeat Password" required>
+                                                <input type="password" class="form-control" id="RegisterRepeatPassword"
+                                                        placeholder="Repeat Password" required>
                                         </div>
                                 </div>
                                 <div class="modal-footer">
                                         <p id="registerAlertText"></p>
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button type="button" class="btn btn-success" id="register">Register</button>
+                                </div>
+                        </div>
+                </div>
+        </div>
+
+        <!-- Profile Modal -->
+        <div class="modal fade close-modal" id="profileModal" tabindex="-1" role="dialog" aria-labelledby="profileModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                                <div class="modal-header">
+                                        <h5 class="modal-title" id="accountModalLabel">Profile</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                        </button>
+                                </div>
+                                <div class="modal-body">
+                                        <!-- TODO -->
+                                        <img class="avatar-profile" src="assets/icons/png/icon.png" />
+                                        <p>User Display Name</p>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                 </div>
                         </div>
                 </div>
@@ -110,7 +147,8 @@
         </div>
         <div class="instanceView">
                 <div>
-                        <input type="text" class="form-control" id="instance" placeholder="instance location..." readonly>
+                        <input type="text" class="form-control" id="instance" placeholder="instance location..."
+                                readonly>
                 </div>
         </div>
 

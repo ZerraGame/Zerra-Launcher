@@ -140,7 +140,7 @@ var LoginCallback = function (result, error) {
                                 $('#AccountInfo').show();
 
                                 //TODO: Put avatar link in src
-                                document.getElementById("AccountInfo").innerHTML = '<img class = "avatar" src="assets/icons/png/icon.png"/>' + response.data.PlayerProfile.DisplayName;
+                                document.getElementById("AccountInfo").innerHTML = '<img class = "avatar-status" src="assets/icons/png/icon.png"/>' + response.data.PlayerProfile.DisplayName;
 
                                 cookies.setCookie("Session_DISPLAYNAME", response.data.PlayerProfile.DisplayName);
                                 cookies.setCookie("Session_AVATAR", response.data.PlayerProfile.AvatarUrl);
