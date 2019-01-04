@@ -73,6 +73,8 @@ function SignOut() {
 }
 
 function TryLogin(Email, Password) {
+        $('#AccountInfo').html("Signing In...");
+        
         // Create a login request for PlayFab
         var loginRequest = {
                 Email: Email,
