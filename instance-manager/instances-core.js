@@ -493,7 +493,7 @@ window.jQuery = window.$ = require('jquery');
 								var execPath = data.gameFile;
 								console.log(execPath);
 								cookies.getCookie('Session_PLAYFABID', (error, cookie) => {
-									var childProcess = child.exec('start '+execPath + " --client --dir " + zpath+"/Instances/"+name + "--id "+cookie[0].value , function (error, stdout, stderr){
+									var childProcess = child.exec('start '+execPath + " --client --dir " + zpath+"/Instances/"+name + " --id "+cookie[0].value , function (error, stdout, stderr){
 										console.log('stdout: ' + stdout);
 										console.log('stderr: ' + stderr);
 										
