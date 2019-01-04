@@ -491,7 +491,7 @@ window.jQuery = window.$ = require('jquery');
 							if(data.name && data.version && data.icon && data.gameFile){ //Check if everything is in place
 								var execPath = data.gameFile;
 								console.log(execPath);
-								var childProcess = child.exec('start '+execPath, function (error, stdout, stderr){
+								var childProcess = child.exec('start '+execPath + " --client --dir " + zpath+"/Instances/"+name, function (error, stdout, stderr){
 									console.log('stdout: ' + stdout);
 									console.log('stderr: ' + stderr);
 									if(error !== null){
