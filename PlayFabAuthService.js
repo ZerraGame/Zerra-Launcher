@@ -141,7 +141,7 @@ var LoginCallback = function (result, error) {
 
                                 //TODO: Put avatar link in src
                                 document.getElementById("AccountInfo").innerHTML = '<img class = "avatar" src="assets/icons/png/icon.png"/>' + response.data.PlayerProfile.DisplayName;
-                                
+
                                 cookies.setCookie("Session_DISPLAYNAME", response.data.PlayerProfile.DisplayName);
                                 cookies.setCookie("Session_AVATAR", response.data.PlayerProfile.AvatarUrl);
                                 cookies.setCookie("Session_CREATIONDATE", response.data.PlayerProfile.Created);
@@ -172,11 +172,11 @@ var RegisterCallBack = function (result, error) {
 
                 PlayFabClientSDK.UpdateUserTitleDisplayName({
                         DisplayName: document.getElementById("RegisterUsername").value
-                }, function (response, error) {});
+                }, function (response, error) { });
 
                 PlayFabClientSDK.UpdateAvatarUrl({
                         ImageUrl: 'https://i.imgur.com/Vnd3AXc.png'
-                }, function (response, error) {});
+                }, function (response, error) { });
 
                 sendFeedBack = true;
         } else if (error !== null) {
