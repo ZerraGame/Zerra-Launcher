@@ -13,7 +13,6 @@ function openInstancesMenu() {
         width: 1000,
         resizable: false,
     });
-    instances.openDevTools(); //Why u bullying me
 
     instances.setMenu(null);
 
@@ -45,8 +44,7 @@ function openSettings() {
         frame: false,
         icon: path.join(__dirname, 'assets/res/icon.png')
     });
-    //TODO:
-    //settings.openDevTools();
+    
     settings.setMenu(null);
 
     // Load html into window
