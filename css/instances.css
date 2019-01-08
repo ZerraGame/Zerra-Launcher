@@ -68,6 +68,11 @@
 
 #res {
     width:100%;
+    margin-bottom: 50px;
+}
+
+#delete {
+    width:100%;
     margin-bottom: 100px;
 }
 
