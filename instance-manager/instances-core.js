@@ -121,7 +121,7 @@ function createInstance() {
 					var instance = document.createElement('div');
 					instance.className = 'instance';
 					instance.setAttribute("id", instances_holder.childElementCount);
-					instance.addEventListener("onclick", function () { selectInstance() });
+					instance.addEventListener("click", function () { selectInstance(this) });
 
 					//Instance's Image
 					var img = document.createElement('img');
@@ -295,7 +295,7 @@ function importInstance() {
 										var instance = document.createElement('div');
 										instance.className = 'instance';
 										instance.setAttribute("id", instances_holder.childElementCount);
-										instance.addEventListener("onclick", function () { selectInstance() });
+										instance.addEventListener("click", function () { selectInstance(this) });
 
 										//Instance's Image
 										var img = document.createElement('img');
@@ -350,8 +350,7 @@ function importInstance() {
 										var instance = document.createElement('div');
 										instance.className = 'instance';
 										instance.setAttribute("id", instances_holder.childElementCount);
-										instance.addEventListener("onclick", function () { selectInstance() });
-
+										instance.addEventListener("click", function () { selectInstance(this) });
 										//Instance's Image
 										var img = document.createElement('img');
 										img.className = 'instance-img';
