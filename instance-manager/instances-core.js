@@ -477,6 +477,21 @@ function runInstance() {
 		}
 	}
 }
+
+function DeleteSelect(){
+	const fse = require('fs-extra')
+	const child = require('child_process'); //If anyone has a better idea to do it, feel free to tell me.
+		var name = $(selectedInstance).children(".instance-name").text();
+	fs.readFile(zpath + "/Instances/" + name + "/info.json", function (err, jdata) {
+	var data = JSON.parse(jdata); //unJSONify
+	fse.remove(zpath+'/Instances/'+data.name);
+		if (err) throw err;
+    // if no error, file has been deleted successfully
+    console.log('File deleted!');
+		location.reload();
+	});
+}
+
 function selectInstance(instance) {
 	if (!selectedInstance) {
 		selectedInstance = instance;
@@ -487,6 +502,7 @@ function selectInstance(instance) {
 		$('#mod').prop('disabled', false);
 		$('#mods').prop('disabled', false);
 		$('#res').prop('disabled', false);
+		$('#delete').prop('disabled', false);
 		$('#deselect').prop('disabled', false);
 	} else {
 		$(selectedInstance).children(".instance-img").css("filter", "none");
