@@ -30,6 +30,7 @@
 				<button type="button" data-toggle="modal" data-target="#modInstanceModal" id="mod" class="btn btn-success" disabled>Modify</button>
 				<button type="button" data-toggle="modal" data-target="#modModal" id="mods" class="btn btn-info" disabled>Mods</button>
 				<button type="button" data-toggle="modal" id="res" class="btn btn-info" disabled>Resources</button>
+				<button type="button" data-toggle="modal" data-target="#modDeleteModal" id="delete" class="btn btn-danger" disabled>Delete</button>
 			</div>
 		</div>
 
@@ -185,6 +186,31 @@
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 						<button type="button" class="btn btn-success" onclick="importInstance()" id="importInstance">Import</button>
 					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!--Delete Managing Modal-->
+	<div class="modal fade" id="modDeleteModal" tabindex="-1" role="dialog" aria-labelledby="modModalLabel"
+	 aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="modModalLabel">Delete Mods</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">&times;</span>
+					</button>
+				</div>
+				<div class="modal-body">
+					<h1>Are you sure about that?</h1>
+					<p>If you delete this you can not get it back!</p>
+				</div>
+
+				<div class="modal-footer">
+					<p id="newAlertText"></p>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-danger" onclick="DeleteSelect();">Delete</button>
 				</div>
 			</div>
 		</div>
